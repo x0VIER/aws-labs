@@ -1,0 +1,48 @@
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#fff','primaryTextColor':'#000','primaryBorderColor':'#3B82F6','lineColor':'#666'}}}%%
+flowchart TB
+    subgraph Step1["① Create S3 Bucket"]
+        A[S3 Bucket<br/>🪣 your-name-test-bucket-123]
+    end
+    
+    subgraph Step2["② Upload Objects"]
+        B[Object: sample.txt<br/>📄]
+        C[Object Metadata<br/>📋]
+    end
+    
+    subgraph Step3["③ Enable Versioning"]
+        D[Version 1<br/>📄]
+        E[Version 2<br/>📄]
+        F[Version 3<br/>📄]
+    end
+    
+    subgraph Step4["④ Lifecycle Policy"]
+        G[Standard Storage<br/>Day 0-30]
+        H[Standard-IA<br/>Day 31-90]
+        I[Glacier<br/>Day 91-365]
+        J[Expire<br/>Day 365+]
+    end
+    
+    A -->|"Upload"| B
+    B -->|"Contains"| C
+    A -->|"Versioning Enabled"| D
+    D -->|"New upload"| E
+    E -->|"New upload"| F
+    A -->|"Lifecycle Rule Applied"| G
+    G -->|"After 30 days"| H
+    H -->|"After 90 days"| I
+    I -->|"After 365 days"| J
+    
+    style A fill:#3B82F6,stroke:#2563EB,color:#fff
+    style B fill:#3B82F6,stroke:#2563EB,color:#fff
+    style C fill:#3B82F6,stroke:#2563EB,color:#fff
+    style D fill:#10B981,stroke:#059669,color:#fff
+    style E fill:#10B981,stroke:#059669,color:#fff
+    style F fill:#10B981,stroke:#059669,color:#fff
+    style G fill:#FBBF24,stroke:#F59E0B,color:#000
+    style H fill:#F97316,stroke:#EA580C,color:#fff
+    style I fill:#A855F7,stroke:#9333EA,color:#fff
+    style J fill:#EF4444,stroke:#DC2626,color:#fff
+    style Step1 fill:#DBEAFE,stroke:#3B82F6
+    style Step2 fill:#DBEAFE,stroke:#3B82F6
+    style Step3 fill:#D1FAE5,stroke:#10B981
+    style Step4 fill:#FEF3C7,stroke:#FBBF24

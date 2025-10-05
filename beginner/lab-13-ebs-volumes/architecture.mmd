@@ -1,0 +1,40 @@
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#fff','primaryTextColor':'#000','primaryBorderColor':'#F97316','lineColor':'#666'}}}%%
+flowchart TB
+    subgraph Step1["① Create EBS Volume"]
+        A[EBS Volume<br/>1 GiB<br/>vol-0123456789abcdef0]
+    end
+    
+    subgraph Step2["② Attach to EC2"]
+        B[EC2 Instance<br/>i-0123456789abcdef0]
+        C[Device: /dev/sdf]
+    end
+    
+    subgraph Step3["③ Format and Mount"]
+        D[Format<br/>mkfs -t ext4]
+        E[Mount Point<br/>/data]
+    end
+    
+    subgraph Step4["④ Create Snapshot"]
+        F[EBS Snapshot<br/>snap-0123456789abcdef0]
+        G[Stored in S3<br/>Incremental Backup]
+    end
+    
+    A -->|"Attach"| C
+    C -->|"Available to"| B
+    B -->|"Format volume"| D
+    D -->|"Mount to"| E
+    E -->|"Read/Write data"| B
+    A -->|"Create snapshot"| F
+    F -->|"Backup stored"| G
+    
+    style A fill:#F97316,stroke:#EA580C,color:#fff
+    style B fill:#F97316,stroke:#EA580C,color:#fff
+    style C fill:#FBBF24,stroke:#F59E0B,color:#000
+    style D fill:#10B981,stroke:#059669,color:#fff
+    style E fill:#10B981,stroke:#059669,color:#fff
+    style F fill:#A855F7,stroke:#9333EA,color:#fff
+    style G fill:#3B82F6,stroke:#2563EB,color:#fff
+    style Step1 fill:#FFEDD5,stroke:#F97316
+    style Step2 fill:#FFEDD5,stroke:#F97316
+    style Step3 fill:#D1FAE5,stroke:#10B981
+    style Step4 fill:#F3E8FF,stroke:#A855F7

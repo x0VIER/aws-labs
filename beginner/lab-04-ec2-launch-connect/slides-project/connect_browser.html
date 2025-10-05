@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
+    <style>
+      .slide-container {
+        width: 1280px;
+        min-height: 720px;
+        background: #FFFFFF;
+        color: #333333;
+        font-family: Arial, sans-serif;
+        padding: 40px;
+      }
+      .title {
+        font-size: 36px;
+        font-weight: bold;
+        color: #232F3E;
+        margin-bottom: 15px;
+      }
+      .subtitle {
+        font-size: 24px;
+        color: #FF9900;
+        margin-bottom: 20px;
+      }
+      .content {
+        font-size: 20px;
+        display: flex;
+        gap: 40px;
+      }
+      .column {
+        flex: 1;
+      }
+      .step-container {
+        display: flex;
+        margin-bottom: 12px;
+      }
+      .step-number {
+        background-color: #FF9900;
+        color: white;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-right: 15px;
+        flex-shrink: 0;
+      }
+      .step-content {
+        flex: 1;
+      }
+      .info-box {
+        background-color: #f0f7fb;
+        border-left: 5px solid #3498db;
+        padding: 12px;
+        margin: 12px 0;
+        border-radius: 4px;
+      }
+      .footer {
+        font-size: 14px;
+        color: #666;
+        margin-top: 15px;
+        text-align: right;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+      }
+      .comparison-table th {
+        background-color: #f1f1f1;
+        padding: 8px;
+        text-align: left;
+        border: 1px solid #ddd;
+      }
+      .comparison-table td {
+        padding: 8px;
+        border: 1px solid #ddd;
+      }
+      .comparison-table tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="slide-container">
+      <h1 class="title">Step 4: Connect via EC2 Instance Connect</h1>
+      <h2 class="subtitle">Browser-based access to your instance</h2>
+      
+      <div class="content">
+        <div class="column">
+          <p class="mb-3">EC2 Instance Connect provides a simple and secure way to connect to your Linux instances using only your browser, without requiring a key pair.</p>
+          
+          <div class="step-container">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <p>In the EC2 console, select your running instance.</p>
+            </div>
+          </div>
+          
+          <div class="step-container">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <p>Click <strong>Connect</strong> at the top of the page.</p>
+            </div>
+          </div>
+          
+          <div class="step-container">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <p>Select the <strong>EC2 Instance Connect</strong> tab.</p>
+            </div>
+          </div>
+          
+          <div class="step-container">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <p>Keep the default user name (e.g., <code>ec2-user</code> for Amazon Linux).</p>
+            </div>
+          </div>
+          
+          <div class="step-container">
+            <div class="step-number">5</div>
+            <div class="step-content">
+              <p>Click <strong>Connect</strong> to open a terminal window in your browser.</p>
+            </div>
+          </div>
+          
+          <div class="info-box">
+            <p><strong>Note:</strong> EC2 Instance Connect requires that your instance has a public IPv4 address and is in a public subnet with internet access.</p>
+          </div>
+        </div>
+        
+        <div class="column">
+          <p class="mb-3"><strong>Connection Methods Comparison:</strong></p>
+          
+          <table class="comparison-table">
+            <tr>
+              <th>Feature</th>
+              <th>SSH</th>
+              <th>Instance Connect</th>
+            </tr>
+            <tr>
+              <td>Key Pair Required</td>
+              <td>Yes</td>
+              <td>No</td>
+            </tr>
+            <tr>
+              <td>Browser-based</td>
+              <td>No</td>
+              <td>Yes</td>
+            </tr>
+            <tr>
+              <td>File Transfer</td>
+              <td>Yes (SCP)</td>
+              <td>Limited</td>
+            </tr>
+            <tr>
+              <td>Connection Time</td>
+              <td>Persistent</td>
+              <td>Session-based</td>
+            </tr>
+            <tr>
+              <td>IAM Integration</td>
+              <td>Limited</td>
+              <td>Full</td>
+            </tr>
+          </table>
+          
+          <div style="height: 200px; margin-top: 20px;">
+            <canvas id="connectionChart"></canvas>
+          </div>
+        </div>
+      </div>
+      
+      <div class="footer">
+        <p>Authored by V Vier</p>
+      </div>
+    </div>
+    
+    <script>
+      // Chart showing connection methods usage
+      const ctx = document.getElementById('connectionChart').getContext('2d');
+      const connectionChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: ['SSH with Key Pair', 'EC2 Instance Connect', 'Session Manager', 'Other'],
+          datasets: [{
+            data: [45, 30, 20, 5],
+            backgroundColor: [
+              '#3B82F6',
+              '#10B981',
+              '#F97316',
+              '#A855F7'
+            ],
+            borderColor: '#FFFFFF',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            title: {
+              display: true,
+              text: 'EC2 Connection Methods Usage (%)',
+              font: {
+                size: 16
+              }
+            },
+            legend: {
+              position: 'bottom',
+              labels: {
+                boxWidth: 12
+              }
+            }
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

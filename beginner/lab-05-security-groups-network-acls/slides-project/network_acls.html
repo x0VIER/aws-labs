@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
+    <style>
+      .slide-container {
+        width: 1280px;
+        min-height: 720px;
+        background: #FFFFFF;
+        color: #333333;
+        font-family: Arial, sans-serif;
+        padding: 40px;
+      }
+      .title {
+        font-size: 36px;
+        font-weight: bold;
+        color: #232F3E;
+        margin-bottom: 15px;
+      }
+      .subtitle {
+        font-size: 24px;
+        color: #FF9900;
+        margin-bottom: 20px;
+      }
+      .content {
+        font-size: 20px;
+        display: flex;
+        gap: 40px;
+      }
+      .column {
+        flex: 1;
+      }
+      .feature-box {
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 4px;
+      }
+      .footer {
+        font-size: 14px;
+        color: #666;
+        margin-top: 15px;
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="slide-container">
+      <h1 class="title">Step 3: Understanding Network ACLs</h1>
+      <h2 class="subtitle">Subnet-level firewalls in AWS</h2>
+      
+      <div class="content">
+        <div class="column">
+          <p class="mb-3"><strong>Network Access Control Lists (NACLs)</strong> are an optional layer of security that acts as a firewall for controlling traffic in and out of a subnet.</p>
+          
+          <p class="mb-3"><strong>Key Characteristics:</strong></p>
+          
+          <div class="feature-box bg-blue-100 border-l-4 border-blue-500">
+            <strong>Stateless:</strong> Return traffic must be explicitly allowed by rules
+          </div>
+          
+          <div class="feature-box bg-green-100 border-l-4 border-green-500">
+            <strong>Allow and Deny Rules:</strong> You can specify both allow and deny rules
+          </div>
+          
+          <div class="feature-box bg-yellow-100 border-l-4 border-yellow-500">
+            <strong>Subnet Level:</strong> Associated with subnets, not instances
+          </div>
+          
+          <div class="feature-box bg-purple-100 border-l-4 border-purple-500">
+            <strong>Rule Number Priority:</strong> Rules are evaluated in order from lowest to highest
+          </div>
+          
+          <p class="mt-3"><strong>Default Configuration:</strong></p>
+          <ul class="list-disc ml-6">
+            <li>All inbound and outbound traffic is allowed</li>
+            <li>Each subnet is associated with a default NACL</li>
+            <li>A NACL can be associated with multiple subnets</li>
+            <li>A subnet can only be associated with one NACL</li>
+          </ul>
+        </div>
+        
+        <div class="column">
+          <div style="height: 350px;">
+            <canvas id="naclRulesChart"></canvas>
+          </div>
+          
+          <div class="mt-4">
+            <p class="mb-2"><strong>Example NACL Rules:</strong></p>
+            <table class="w-full border-collapse">
+              <thead>
+                <tr class="bg-gray-100">
+                  <th class="border border-gray-300 p-2 text-left">Rule #</th>
+                  <th class="border border-gray-300 p-2 text-left">Type</th>
+                  <th class="border border-gray-300 p-2 text-left">Protocol</th>
+                  <th class="border border-gray-300 p-2 text-left">Port Range</th>
+                  <th class="border border-gray-300 p-2 text-left">Allow/Deny</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="border border-gray-300 p-2">100</td>
+                  <td class="border border-gray-300 p-2">HTTP</td>
+                  <td class="border border-gray-300 p-2">TCP</td>
+                  <td class="border border-gray-300 p-2">80</td>
+                  <td class="border border-gray-300 p-2">ALLOW</td>
+                </tr>
+                <tr>
+                  <td class="border border-gray-300 p-2">110</td>
+                  <td class="border border-gray-300 p-2">HTTPS</td>
+                  <td class="border border-gray-300 p-2">TCP</td>
+                  <td class="border border-gray-300 p-2">443</td>
+                  <td class="border border-gray-300 p-2">ALLOW</td>
+                </tr>
+                <tr>
+                  <td class="border border-gray-300 p-2">120</td>
+                  <td class="border border-gray-300 p-2">SSH</td>
+                  <td class="border border-gray-300 p-2">TCP</td>
+                  <td class="border border-gray-300 p-2">22</td>
+                  <td class="border border-gray-300 p-2">DENY</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <div class="footer">
+        <p>Authored by V Vier</p>
+      </div>
+    </div>
+    
+    <script>
+      // Chart showing NACL rule evaluation
+      const ctx = document.getElementById('naclRulesChart').getContext('2d');
+      const naclRulesChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Inbound Rules', 'Outbound Rules', 'Rule Evaluation', 'Subnet Association', 'Stateless Processing'],
+          datasets: [{
+            label: 'Complexity Level (1-10)',
+            data: [7, 7, 8, 4, 9],
+            backgroundColor: [
+              '#3B82F6',
+              '#10B981',
+              '#F97316',
+              '#A855F7',
+              '#FBBF24'
+            ],
+            borderColor: [
+              '#2563EB',
+              '#059669',
+              '#EA580C',
+              '#9333EA',
+              '#F59E0B'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            title: {
+              display: true,
+              text: 'Network ACL Complexity Factors',
+              font: {
+                size: 16
+              }
+            },
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 10,
+              title: {
+                display: true,
+                text: 'Complexity Level'
+              }
+            }
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

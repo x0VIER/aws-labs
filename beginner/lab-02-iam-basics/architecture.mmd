@@ -1,0 +1,43 @@
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#fff','primaryTextColor':'#000','primaryBorderColor':'#3B82F6','lineColor':'#666'}}}%%
+flowchart TB
+    subgraph Step1["① Create User Groups"]
+        A[S3-Developers Group<br/>📦]
+        B[EC2-Support Group<br/>💻]
+    end
+    
+    subgraph Step2["② Attach Policies"]
+        C[AmazonS3FullAccess<br/>📜]
+        D[AmazonEC2ReadOnlyAccess<br/>📜]
+    end
+    
+    subgraph Step3["③ Create Users"]
+        E[s3-dev-1<br/>👤]
+        F[ec2-support-1<br/>👤]
+    end
+    
+    subgraph Step4["④ IAM Roles"]
+        G[EC2-S3-ReadOnly-Role<br/>🔐]
+        H[EC2 Instance<br/>🖥️]
+    end
+    
+    C -->|"Attached to"| A
+    D -->|"Attached to"| B
+    A -->|"User inherits permissions"| E
+    B -->|"User inherits permissions"| F
+    E -->|"Full S3 Access"| I[S3 Buckets]
+    F -->|"Read-Only Access"| J[EC2 Console]
+    G -->|"AssumeRole"| H
+    H -->|"Read S3 without credentials"| I
+    
+    style A fill:#3B82F6,stroke:#2563EB,color:#fff
+    style B fill:#3B82F6,stroke:#2563EB,color:#fff
+    style C fill:#10B981,stroke:#059669,color:#fff
+    style D fill:#10B981,stroke:#059669,color:#fff
+    style E fill:#FBBF24,stroke:#F59E0B,color:#000
+    style F fill:#FBBF24,stroke:#F59E0B,color:#000
+    style G fill:#A855F7,stroke:#9333EA,color:#fff
+    style H fill:#F97316,stroke:#EA580C,color:#fff
+    style Step1 fill:#DBEAFE,stroke:#3B82F6
+    style Step2 fill:#D1FAE5,stroke:#10B981
+    style Step3 fill:#FEF3C7,stroke:#FBBF24
+    style Step4 fill:#F3E8FF,stroke:#A855F7

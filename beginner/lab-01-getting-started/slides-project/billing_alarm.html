@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
+    <style>
+      .slide-container {
+        width: 1280px;
+        min-height: 720px;
+        background: #FFFFFF;
+        color: #333333;
+        font-family: Arial, sans-serif;
+        padding: 40px;
+      }
+      .title {
+        font-size: 36px;
+        font-weight: bold;
+        color: #232F3E;
+        margin-bottom: 20px;
+      }
+      .subtitle {
+        font-size: 24px;
+        color: #FF9900;
+        margin-bottom: 30px;
+      }
+      .content {
+        font-size: 20px;
+        display: flex;
+        gap: 40px;
+      }
+      .text-content {
+        flex: 1;
+      }
+      .visual-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .step-container {
+        display: flex;
+        margin-bottom: 20px;
+      }
+      .step-number {
+        background-color: #FF9900;
+        color: white;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-right: 15px;
+        flex-shrink: 0;
+      }
+      .step-content {
+        flex: 1;
+      }
+      .code-block {
+        background-color: #f1f1f1;
+        border-left: 4px solid #FF9900;
+        padding: 15px;
+        font-family: monospace;
+        margin: 15px 0;
+        border-radius: 4px;
+        font-size: 16px;
+        overflow-x: auto;
+      }
+      .footer {
+        position: relative;
+        bottom: 0;
+        font-size: 14px;
+        color: #666;
+        margin-top: 30px;
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="slide-container">
+      <h1 class="title">Step 2: Set Up a Billing Alarm</h1>
+      <h2 class="subtitle">Monitoring costs to avoid unexpected charges</h2>
+      
+      <div class="content">
+        <div class="text-content">
+          <p class="mb-4">Setting up a billing alarm helps you monitor your AWS costs and avoid unexpected charges.</p>
+          
+          <div class="step-container">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <p>Sign in to the AWS Management Console as the root user.</p>
+            </div>
+          </div>
+          
+          <div class="step-container">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <p>Search for <strong>CloudWatch</strong> and navigate to <strong>Alarms > Billing</strong>.</p>
+            </div>
+          </div>
+          
+          <div class="step-container">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <p>Click <strong>Create alarm</strong> and select the <strong>EstimatedCharges</strong> metric.</p>
+            </div>
+          </div>
+          
+          <div class="step-container">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <p>Set a threshold (e.g., $10) and configure an SNS topic for email notifications.</p>
+            </div>
+          </div>
+          
+          <div class="step-container">
+            <div class="step-number">5</div>
+            <div class="step-content">
+              <p>Name your alarm (e.g., <strong>Billing-Alarm-10USD</strong>) and create it.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="visual-content">
+          <p class="mb-4"><strong>AWS CLI Alternative:</strong></p>
+          <div class="code-block">
+            <pre>aws cloudwatch put-metric-alarm \
+  --alarm-name Billing-Alarm-10USD \
+  --alarm-description "Alarm when charges exceed $10" \
+  --metric-name EstimatedCharges \
+  --namespace AWS/Billing \
+  --statistic Maximum \
+  --period 86400 \
+  --evaluation-periods 1 \
+  --threshold 10 \
+  --comparison-operator GreaterThanThreshold \
+  --dimensions Name=Currency,Value=USD \
+  --alarm-actions arn:aws:sns:us-east-1:ACCOUNT_ID:Billing-Alerts</pre>
+          </div>
+          
+          <div class="mt-6">
+            <div style="height: 250px;">
+              <canvas id="billingChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="footer">
+        <p>Authored by V Vier</p>
+      </div>
+    </div>
+    
+    <script>
+      // Sample data for billing chart
+      const ctx = document.getElementById('billingChart').getContext('2d');
+      const billingChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['Day 1', 'Day 5', 'Day 10', 'Day 15', 'Day 20', 'Day 25', 'Day 30'],
+          datasets: [{
+            label: 'Estimated Charges ($)',
+            data: [0, 2, 4, 6, 7, 9, 11],
+            backgroundColor: 'rgba(255, 153, 0, 0.2)',
+            borderColor: '#FF9900',
+            borderWidth: 2,
+            tension: 0.3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            title: {
+              display: true,
+              text: 'Monthly Billing Example with $10 Alarm',
+              font: {
+                size: 16
+              }
+            },
+            annotation: {
+              annotations: {
+                line1: {
+                  type: 'line',
+                  yMin: 10,
+                  yMax: 10,
+                  borderColor: '#EF4444',
+                  borderWidth: 2,
+                  label: {
+                    content: 'Alarm Threshold',
+                    enabled: true
+                  }
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: 'Cost ($)'
+              }
+            }
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

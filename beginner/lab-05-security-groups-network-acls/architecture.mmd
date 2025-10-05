@@ -1,0 +1,40 @@
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#fff','primaryTextColor':'#000','primaryBorderColor':'#EF4444','lineColor':'#666'}}}%%
+flowchart TB
+    subgraph Internet["Internet"]
+        A[User Traffic<br/>🌐]
+    end
+    
+    subgraph VPC["VPC - 10.0.0.0/16"]
+        subgraph Subnet["Subnet - 10.0.1.0/24"]
+            subgraph NACL["Network ACL (Subnet Level)"]
+                B[Inbound Rules<br/>✅ Allow / ❌ Deny]
+                C[Outbound Rules<br/>✅ Allow / ❌ Deny]
+            end
+            
+            subgraph SG["Security Group (Instance Level)"]
+                D[Inbound Rules<br/>✅ Allow Only]
+                E[Outbound Rules<br/>✅ Allow Only]
+            end
+            
+            F[EC2 Instance<br/>🖥️]
+        end
+    end
+    
+    A -->|"1. First Layer"| B
+    B -->|"Stateless - Check both ways"| C
+    C -->|"2. Second Layer"| D
+    D -->|"Stateful - Return traffic auto-allowed"| E
+    E -->|"3. Reaches Instance"| F
+    F -->|"Response Traffic"| E
+    E -->|"Auto-allowed (Stateful)"| A
+    
+    style A fill:#3B82F6,stroke:#2563EB,color:#fff
+    style B fill:#EF4444,stroke:#DC2626,color:#fff
+    style C fill:#EF4444,stroke:#DC2626,color:#fff
+    style D fill:#F97316,stroke:#EA580C,color:#fff
+    style E fill:#F97316,stroke:#EA580C,color:#fff
+    style F fill:#10B981,stroke:#059669,color:#fff
+    style NACL fill:#FEE2E2,stroke:#EF4444
+    style SG fill:#FFEDD5,stroke:#F97316
+    style Subnet fill:#F0F9FF,stroke:#3B82F6
+    style VPC fill:#F8FAFC,stroke:#64748B

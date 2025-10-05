@@ -1,0 +1,250 @@
+{
+  "title": "DynamoDB Basics Architecture",
+  "description": "Architecture diagram showing DynamoDB tables, indexes, and access patterns",
+  "layout": {
+    "orientation": "vertical",
+    "components": [
+      {
+        "type": "cloud",
+        "name": "AWS Cloud",
+        "position": "container",
+        "components": [
+          {
+            "type": "region",
+            "name": "AWS Region",
+            "position": "container",
+            "components": [
+              {
+                "type": "service",
+                "name": "Amazon DynamoDB",
+                "position": "container",
+                "icon": "dynamodb",
+                "components": [
+                  {
+                    "type": "table",
+                    "name": "Users Table",
+                    "position": "left",
+                    "components": [
+                      {
+                        "type": "key-schema",
+                        "name": "Primary Key",
+                        "position": "top",
+                        "components": [
+                          {
+                            "type": "attribute",
+                            "name": "UserId (Partition Key)",
+                            "data-type": "String"
+                          },
+                          {
+                            "type": "attribute",
+                            "name": "Email (Sort Key)",
+                            "data-type": "String"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "index",
+                        "name": "LastName-FirstName-index (GSI)",
+                        "position": "middle",
+                        "components": [
+                          {
+                            "type": "attribute",
+                            "name": "LastName (Partition Key)",
+                            "data-type": "String"
+                          },
+                          {
+                            "type": "attribute",
+                            "name": "FirstName (Sort Key)",
+                            "data-type": "String"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "item",
+                        "name": "Sample Item",
+                        "position": "bottom",
+                        "attributes": {
+                          "UserId": "user1",
+                          "Email": "user1@example.com",
+                          "FirstName": "John",
+                          "LastName": "Doe",
+                          "Age": 30,
+                          "Address": {
+                            "Street": "123 Main St",
+                            "City": "Seattle",
+                            "State": "WA",
+                            "ZipCode": "98101"
+                          },
+                          "PhoneNumbers": [
+                            "555-123-4567",
+                            "555-987-6543"
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table",
+                    "name": "Orders Table",
+                    "position": "right",
+                    "components": [
+                      {
+                        "type": "key-schema",
+                        "name": "Primary Key",
+                        "position": "top",
+                        "components": [
+                          {
+                            "type": "attribute",
+                            "name": "CustomerId (Partition Key)",
+                            "data-type": "String"
+                          },
+                          {
+                            "type": "attribute",
+                            "name": "OrderId (Sort Key)",
+                            "data-type": "String"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "index",
+                        "name": "OrderDate-index (LSI)",
+                        "position": "middle",
+                        "components": [
+                          {
+                            "type": "attribute",
+                            "name": "CustomerId (Partition Key)",
+                            "data-type": "String"
+                          },
+                          {
+                            "type": "attribute",
+                            "name": "OrderDate (Sort Key)",
+                            "data-type": "String"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "item",
+                        "name": "Sample Item",
+                        "position": "bottom",
+                        "attributes": {
+                          "CustomerId": "cust1",
+                          "OrderId": "order1",
+                          "OrderDate": "2023-01-15",
+                          "Amount": 125.50,
+                          "Status": "Shipped"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "feature",
+                    "name": "DynamoDB Streams",
+                    "position": "bottom-left",
+                    "icon": "dynamodb-streams"
+                  },
+                  {
+                    "type": "feature",
+                    "name": "Auto Scaling",
+                    "position": "bottom-middle",
+                    "icon": "auto-scaling"
+                  },
+                  {
+                    "type": "feature",
+                    "name": "Backup & Restore",
+                    "position": "bottom-right",
+                    "icon": "backup"
+                  }
+                ]
+              },
+              {
+                "type": "service",
+                "name": "Application",
+                "position": "top",
+                "icon": "application",
+                "operations": [
+                  "Create",
+                  "Read",
+                  "Update",
+                  "Delete",
+                  "Query",
+                  "Scan"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "flows": [
+    {
+      "source": "Application",
+      "target": "Users Table",
+      "label": "CRUD Operations",
+      "style": "solid"
+    },
+    {
+      "source": "Application",
+      "target": "Orders Table",
+      "label": "CRUD Operations",
+      "style": "solid"
+    },
+    {
+      "source": "Users Table",
+      "target": "DynamoDB Streams",
+      "label": "Change Data Capture",
+      "style": "dashed"
+    }
+  ],
+  "legend": {
+    "items": [
+      {
+        "icon": "dynamodb",
+        "label": "DynamoDB Table"
+      },
+      {
+        "icon": "dynamodb-streams",
+        "label": "DynamoDB Streams"
+      },
+      {
+        "icon": "auto-scaling",
+        "label": "Auto Scaling"
+      },
+      {
+        "icon": "backup",
+        "label": "Backup & Restore"
+      }
+    ]
+  },
+  "steps": [
+    {
+      "number": 1,
+      "description": "Create DynamoDB tables",
+      "target": "Amazon DynamoDB"
+    },
+    {
+      "number": 2,
+      "description": "Define primary keys and indexes",
+      "target": "Primary Key"
+    },
+    {
+      "number": 3,
+      "description": "Add items to tables",
+      "target": "Sample Item"
+    },
+    {
+      "number": 4,
+      "description": "Query and scan data",
+      "target": "Application"
+    },
+    {
+      "number": 5,
+      "description": "Configure additional features",
+      "target": "DynamoDB Streams"
+    }
+  ],
+  "metadata": {
+    "author": "V Vier",
+    "version": "1.0"
+  }
+}

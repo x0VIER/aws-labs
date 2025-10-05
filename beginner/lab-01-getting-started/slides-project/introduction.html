@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
+    <style>
+      .slide-container {
+        width: 1280px;
+        min-height: 720px;
+        background: #FFFFFF;
+        color: #333333;
+        font-family: Arial, sans-serif;
+        padding: 40px;
+      }
+      .title {
+        font-size: 36px;
+        font-weight: bold;
+        color: #232F3E;
+        margin-bottom: 20px;
+      }
+      .subtitle {
+        font-size: 24px;
+        color: #FF9900;
+        margin-bottom: 30px;
+      }
+      .content {
+        font-size: 20px;
+        display: flex;
+        gap: 40px;
+      }
+      .text-content {
+        flex: 1;
+      }
+      .image-container {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .architecture-image {
+        width: 550px;
+        height: 400px;
+        object-fit: contain;
+      }
+      .footer {
+        position: relative;
+        bottom: 0;
+        font-size: 14px;
+        color: #666;
+        margin-top: 30px;
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="slide-container">
+      <h1 class="title">Introduction to AWS Management Console</h1>
+      <h2 class="subtitle">Your gateway to AWS services</h2>
+      
+      <div class="content">
+        <div class="text-content">
+          <p class="mb-4">The <strong>AWS Management Console</strong> is a web-based interface for accessing and managing AWS services.</p>
+          
+          <p class="mb-4">In this lab, we'll set up three essential components:</p>
+          
+          <ul class="list-disc ml-6 mb-6">
+            <li class="mb-2"><strong class="text-blue-700">AWS Account</strong> - The foundation of your AWS environment</li>
+            <li class="mb-2"><strong class="text-orange-500">Billing Alarm</strong> - To monitor and control costs</li>
+            <li class="mb-2"><strong class="text-blue-700">IAM User</strong> - For secure, day-to-day access</li>
+          </ul>
+          
+          <p class="mb-4">Following AWS security best practices, you should:</p>
+          <ul class="list-disc ml-6">
+            <li class="mb-2">Avoid using the root user for everyday tasks</li>
+            <li class="mb-2">Set up cost monitoring from the beginning</li>
+            <li class="mb-2">Use IAM users with appropriate permissions</li>
+          </ul>
+        </div>
+        
+        <div class="image-container">
+          <img src="/home/ubuntu/aws-labs/beginner/lab-01-getting-started/slides-project/assets/architecture.png" alt="AWS Account Setup Architecture" class="architecture-image">
+        </div>
+      </div>
+      
+      <div class="footer">
+        <p>Authored by V Vier</p>
+      </div>
+    </div>
+  </body>
+</html>

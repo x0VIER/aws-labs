@@ -1,0 +1,272 @@
+{
+  "title": "Load Balancers Architecture",
+  "description": "Architecture diagram showing Application Load Balancer with Auto Scaling Group across multiple Availability Zones",
+  "layout": {
+    "orientation": "vertical",
+    "components": [
+      {
+        "type": "cloud",
+        "name": "AWS Cloud",
+        "position": "container",
+        "components": [
+          {
+            "type": "region",
+            "name": "AWS Region",
+            "position": "container",
+            "components": [
+              {
+                "type": "vpc",
+                "name": "ALB-Lab-VPC",
+                "cidr": "10.0.0.0/16",
+                "position": "container",
+                "components": [
+                  {
+                    "type": "availability-zone",
+                    "name": "Availability Zone 1",
+                    "position": "left",
+                    "components": [
+                      {
+                        "type": "subnet",
+                        "name": "Public Subnet 1",
+                        "cidr": "10.0.1.0/24",
+                        "position": "top",
+                        "color": "blue"
+                      },
+                      {
+                        "type": "subnet",
+                        "name": "Private Subnet 1",
+                        "cidr": "10.0.3.0/24",
+                        "position": "bottom",
+                        "color": "green"
+                      },
+                      {
+                        "type": "instance",
+                        "name": "EC2 Instance 1",
+                        "position": "bottom",
+                        "icon": "ec2",
+                        "status": "running",
+                        "parent": "Private Subnet 1"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "availability-zone",
+                    "name": "Availability Zone 2",
+                    "position": "right",
+                    "components": [
+                      {
+                        "type": "subnet",
+                        "name": "Public Subnet 2",
+                        "cidr": "10.0.2.0/24",
+                        "position": "top",
+                        "color": "blue"
+                      },
+                      {
+                        "type": "subnet",
+                        "name": "Private Subnet 2",
+                        "cidr": "10.0.4.0/24",
+                        "position": "bottom",
+                        "color": "green"
+                      },
+                      {
+                        "type": "instance",
+                        "name": "EC2 Instance 2",
+                        "position": "bottom",
+                        "icon": "ec2",
+                        "status": "running",
+                        "parent": "Private Subnet 2"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "gateway",
+                    "name": "Internet Gateway",
+                    "position": "top",
+                    "icon": "internet-gateway"
+                  },
+                  {
+                    "type": "nat-gateway",
+                    "name": "NAT Gateway",
+                    "position": "middle",
+                    "parent": "Public Subnet 1"
+                  },
+                  {
+                    "type": "load-balancer",
+                    "name": "Application Load Balancer",
+                    "position": "middle-top",
+                    "icon": "application-load-balancer",
+                    "listeners": ["HTTP:80"]
+                  },
+                  {
+                    "type": "target-group",
+                    "name": "Target Group",
+                    "position": "middle",
+                    "targets": ["EC2 Instance 1", "EC2 Instance 2"],
+                    "health-check": {
+                      "protocol": "HTTP",
+                      "path": "/"
+                    }
+                  },
+                  {
+                    "type": "security-group",
+                    "name": "ALB-SG",
+                    "position": "top-right",
+                    "rules": ["HTTP (80) from anywhere"]
+                  },
+                  {
+                    "type": "security-group",
+                    "name": "WebServer-SG",
+                    "position": "middle-right",
+                    "rules": ["HTTP (80) from ALB-SG", "SSH (22) from admin IP"]
+                  },
+                  {
+                    "type": "auto-scaling",
+                    "name": "Auto Scaling Group",
+                    "position": "bottom",
+                    "config": {
+                      "min": 2,
+                      "max": 4,
+                      "desired": 2
+                    }
+                  },
+                  {
+                    "type": "launch-template",
+                    "name": "Launch Template",
+                    "position": "bottom-right",
+                    "config": {
+                      "ami": "Amazon Linux 2",
+                      "instance-type": "t2.micro"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "flows": [
+    {
+      "source": "Internet",
+      "target": "Internet Gateway",
+      "label": "User Traffic",
+      "style": "solid"
+    },
+    {
+      "source": "Internet Gateway",
+      "target": "Application Load Balancer",
+      "label": "HTTP Traffic",
+      "style": "solid"
+    },
+    {
+      "source": "Application Load Balancer",
+      "target": "Target Group",
+      "label": "Distributes Traffic",
+      "style": "solid"
+    },
+    {
+      "source": "Target Group",
+      "target": "EC2 Instance 1",
+      "label": "HTTP Requests",
+      "style": "solid"
+    },
+    {
+      "source": "Target Group",
+      "target": "EC2 Instance 2",
+      "label": "HTTP Requests",
+      "style": "solid"
+    },
+    {
+      "source": "EC2 Instance 1",
+      "target": "NAT Gateway",
+      "label": "Outbound Traffic",
+      "style": "dashed"
+    },
+    {
+      "source": "EC2 Instance 2",
+      "target": "NAT Gateway",
+      "label": "Outbound Traffic",
+      "style": "dashed"
+    },
+    {
+      "source": "NAT Gateway",
+      "target": "Internet Gateway",
+      "label": "Outbound Traffic",
+      "style": "dashed"
+    },
+    {
+      "source": "Auto Scaling Group",
+      "target": "EC2 Instance 1",
+      "label": "Manages",
+      "style": "dashed"
+    },
+    {
+      "source": "Auto Scaling Group",
+      "target": "EC2 Instance 2",
+      "label": "Manages",
+      "style": "dashed"
+    },
+    {
+      "source": "Launch Template",
+      "target": "Auto Scaling Group",
+      "label": "Uses",
+      "style": "dashed"
+    }
+  ],
+  "legend": {
+    "items": [
+      {
+        "color": "blue",
+        "label": "Public Subnet"
+      },
+      {
+        "color": "green",
+        "label": "Private Subnet"
+      },
+      {
+        "icon": "application-load-balancer",
+        "label": "Application Load Balancer"
+      },
+      {
+        "icon": "ec2",
+        "label": "EC2 Instance"
+      },
+      {
+        "icon": "auto-scaling",
+        "label": "Auto Scaling Group"
+      }
+    ]
+  },
+  "steps": [
+    {
+      "number": 1,
+      "description": "Create VPC with public and private subnets",
+      "target": "ALB-Lab-VPC"
+    },
+    {
+      "number": 2,
+      "description": "Create security groups",
+      "target": "ALB-SG"
+    },
+    {
+      "number": 3,
+      "description": "Create Launch Template",
+      "target": "Launch Template"
+    },
+    {
+      "number": 4,
+      "description": "Create Application Load Balancer",
+      "target": "Application Load Balancer"
+    },
+    {
+      "number": 5,
+      "description": "Create Auto Scaling Group",
+      "target": "Auto Scaling Group"
+    }
+  ],
+  "metadata": {
+    "author": "V Vier",
+    "version": "1.0"
+  }
+}

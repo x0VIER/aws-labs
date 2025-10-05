@@ -1,0 +1,242 @@
+{
+  "title": "Elastic Beanstalk Deployment Architecture",
+  "description": "Architecture diagram showing Elastic Beanstalk components and deployment workflow",
+  "layout": {
+    "orientation": "vertical",
+    "components": [
+      {
+        "type": "cloud",
+        "name": "AWS Cloud",
+        "position": "container",
+        "components": [
+          {
+            "type": "region",
+            "name": "AWS Region",
+            "position": "container",
+            "components": [
+              {
+                "type": "service",
+                "name": "Elastic Beanstalk",
+                "position": "container",
+                "icon": "elastic-beanstalk",
+                "components": [
+                  {
+                    "type": "component",
+                    "name": "Elastic Beanstalk Environment",
+                    "position": "container",
+                    "components": [
+                      {
+                        "type": "service",
+                        "name": "Auto Scaling Group",
+                        "position": "container",
+                        "icon": "auto-scaling",
+                        "components": [
+                          {
+                            "type": "instance",
+                            "name": "EC2 Instance 1",
+                            "position": "left",
+                            "icon": "ec2",
+                            "components": [
+                              {
+                                "type": "component",
+                                "name": "Node.js Application",
+                                "position": "inside",
+                                "icon": "nodejs"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "instance",
+                            "name": "EC2 Instance 2",
+                            "position": "right",
+                            "icon": "ec2",
+                            "components": [
+                              {
+                                "type": "component",
+                                "name": "Node.js Application",
+                                "position": "inside",
+                                "icon": "nodejs"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "service",
+                        "name": "Application Load Balancer",
+                        "position": "top",
+                        "icon": "application-load-balancer"
+                      },
+                      {
+                        "type": "service",
+                        "name": "CloudWatch",
+                        "position": "right",
+                        "icon": "cloudwatch"
+                      },
+                      {
+                        "type": "service",
+                        "name": "S3 Bucket",
+                        "position": "bottom",
+                        "icon": "s3",
+                        "description": "Application Versions"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "service",
+                "name": "CodePipeline",
+                "position": "left",
+                "icon": "codepipeline",
+                "components": [
+                  {
+                    "type": "component",
+                    "name": "Source",
+                    "position": "top",
+                    "icon": "codecommit"
+                  },
+                  {
+                    "type": "component",
+                    "name": "Build",
+                    "position": "middle",
+                    "icon": "codebuild"
+                  },
+                  {
+                    "type": "component",
+                    "name": "Deploy",
+                    "position": "bottom",
+                    "icon": "codedeploy"
+                  }
+                ]
+              },
+              {
+                "type": "actor",
+                "name": "Developer",
+                "position": "left-outside",
+                "icon": "user"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "flows": [
+    {
+      "source": "Developer",
+      "target": "Source",
+      "label": "1. Push Code",
+      "style": "solid"
+    },
+    {
+      "source": "Source",
+      "target": "Build",
+      "label": "2. Trigger Build",
+      "style": "solid"
+    },
+    {
+      "source": "Build",
+      "target": "Deploy",
+      "label": "3. Package App",
+      "style": "solid"
+    },
+    {
+      "source": "Deploy",
+      "target": "S3 Bucket",
+      "label": "4. Upload Version",
+      "style": "solid"
+    },
+    {
+      "source": "S3 Bucket",
+      "target": "Elastic Beanstalk Environment",
+      "label": "5. Deploy Version",
+      "style": "solid"
+    },
+    {
+      "source": "Application Load Balancer",
+      "target": "Auto Scaling Group",
+      "label": "6. Route Traffic",
+      "style": "solid"
+    },
+    {
+      "source": "Auto Scaling Group",
+      "target": "CloudWatch",
+      "label": "7. Monitor",
+      "style": "dashed"
+    }
+  ],
+  "legend": {
+    "items": [
+      {
+        "icon": "elastic-beanstalk",
+        "label": "Elastic Beanstalk"
+      },
+      {
+        "icon": "ec2",
+        "label": "EC2 Instance"
+      },
+      {
+        "icon": "application-load-balancer",
+        "label": "Application Load Balancer"
+      },
+      {
+        "icon": "auto-scaling",
+        "label": "Auto Scaling Group"
+      },
+      {
+        "icon": "cloudwatch",
+        "label": "CloudWatch"
+      },
+      {
+        "icon": "s3",
+        "label": "S3 Bucket"
+      },
+      {
+        "icon": "codepipeline",
+        "label": "CodePipeline"
+      }
+    ]
+  },
+  "steps": [
+    {
+      "number": 1,
+      "description": "Developer pushes code to repository",
+      "target": "Source"
+    },
+    {
+      "number": 2,
+      "description": "CodePipeline triggers build process",
+      "target": "Build"
+    },
+    {
+      "number": 3,
+      "description": "CodeBuild packages application",
+      "target": "Build"
+    },
+    {
+      "number": 4,
+      "description": "Application version uploaded to S3",
+      "target": "S3 Bucket"
+    },
+    {
+      "number": 5,
+      "description": "Elastic Beanstalk deploys new version",
+      "target": "Elastic Beanstalk Environment"
+    },
+    {
+      "number": 6,
+      "description": "Load balancer routes traffic to instances",
+      "target": "Application Load Balancer"
+    },
+    {
+      "number": 7,
+      "description": "CloudWatch monitors application health",
+      "target": "CloudWatch"
+    }
+  ],
+  "metadata": {
+    "author": "V Vier",
+    "version": "1.0"
+  }
+}

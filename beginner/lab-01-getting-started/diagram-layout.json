@@ -1,0 +1,102 @@
+{
+  "lab_number": 1,
+  "lab_title": "Getting Started with AWS Console",
+  "style": "technical_architecture",
+  "background": "white",
+  "color_scheme": {
+    "security": "#EF4444",
+    "monitoring": "#F97316",
+    "users": "#3B82F6"
+  },
+  "elements": [
+    {
+      "type": "step_number",
+      "number": 1,
+      "position": "top_left",
+      "label": "Create AWS Account"
+    },
+    {
+      "type": "service",
+      "name": "Root User",
+      "icon": "user_shield",
+      "color": "#EF4444",
+      "position": "center_left"
+    },
+    {
+      "type": "arrow",
+      "from": "step_1",
+      "to": "root_user",
+      "label": "Account Setup",
+      "color": "#EF4444"
+    },
+    {
+      "type": "step_number",
+      "number": 2,
+      "position": "top_center",
+      "label": "Set Up Billing Alarm"
+    },
+    {
+      "type": "service",
+      "name": "CloudWatch",
+      "icon": "cloudwatch",
+      "color": "#F97316",
+      "position": "center"
+    },
+    {
+      "type": "service",
+      "name": "SNS Topic",
+      "icon": "sns",
+      "color": "#F97316",
+      "position": "center_right"
+    },
+    {
+      "type": "arrow",
+      "from": "step_2",
+      "to": "cloudwatch",
+      "label": "Billing Alarm",
+      "color": "#F97316"
+    },
+    {
+      "type": "arrow",
+      "from": "cloudwatch",
+      "to": "sns",
+      "label": "Email Alert",
+      "color": "#F97316"
+    },
+    {
+      "type": "step_number",
+      "number": 3,
+      "position": "bottom_left",
+      "label": "Create IAM User"
+    },
+    {
+      "type": "service",
+      "name": "IAM",
+      "icon": "iam",
+      "color": "#3B82F6",
+      "position": "bottom_center"
+    },
+    {
+      "type": "service",
+      "name": "Admin User",
+      "icon": "user",
+      "color": "#3B82F6",
+      "position": "bottom_right"
+    },
+    {
+      "type": "arrow",
+      "from": "step_3",
+      "to": "iam",
+      "label": "Create User",
+      "color": "#3B82F6"
+    },
+    {
+      "type": "arrow",
+      "from": "iam",
+      "to": "admin_user",
+      "label": "AdministratorAccess",
+      "color": "#3B82F6"
+    }
+  ],
+  "footer": "Authored by V Vier"
+}

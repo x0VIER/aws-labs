@@ -1,0 +1,27 @@
+flowchart TD
+    %% Define nodes
+    Dev["Developer"]
+    Source["Source Repository"]
+    Build["Build Service"]
+    S3["S3 Bucket"]
+    EB["Elastic Beanstalk"]
+    ALB["Application Load Balancer"]
+    EC2_1["EC2 Instance 1"]
+    EC2_2["EC2 Instance 2"]
+    CW["CloudWatch"]
+    
+    %% Define connections
+    Dev -->|"1. Push Code"| Source
+    Source -->|"2. Trigger Build"| Build
+    Build -->|"3. Package App"| S3
+    S3 -->|"4. Deploy Version"| EB
+    EB -->|"5. Create/Update"| ALB
+    ALB -->|"6. Route Traffic"| EC2_1
+    ALB -->|"6. Route Traffic"| EC2_2
+    EC2_1 -->|"7. Send Metrics"| CW
+    EC2_2 -->|"7. Send Metrics"| CW
+    CW -->|"8. Monitor"| EB
+    
+    %% Add author credit
+    author["Authored by V Vier"]
+    style author fill:none,stroke:none

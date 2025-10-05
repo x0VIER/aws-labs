@@ -1,0 +1,40 @@
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#fff','primaryTextColor':'#000','primaryBorderColor':'#14B8A6','lineColor':'#666'}}}%%
+flowchart TB
+    subgraph User["User"]
+        A[Web Browser<br/>www.example.com]
+    end
+    
+    subgraph Route53["Route 53"]
+        B[Hosted Zone<br/>example.com]
+        C[A Record<br/>Alias to S3]
+        D[Name Servers<br/>ns-123.awsdns-45.com]
+    end
+    
+    subgraph S3["Amazon S3"]
+        E[S3 Bucket<br/>www.example.com]
+        F[Static Website<br/>index.html]
+    end
+    
+    subgraph Domain["Domain Registrar"]
+        G[Domain Registration<br/>example.com]
+    end
+    
+    A -->|"DNS Query"| D
+    D -->|"Resolve"| B
+    B -->|"Check records"| C
+    C -->|"Route traffic"| E
+    E -->|"Serve website"| F
+    F -->|"HTTP Response"| A
+    G -.->|"Point to"| D
+    
+    style A fill:#10B981,stroke:#059669,color:#fff
+    style B fill:#14B8A6,stroke:#0D9488,color:#fff
+    style C fill:#14B8A6,stroke:#0D9488,color:#fff
+    style D fill:#14B8A6,stroke:#0D9488,color:#fff
+    style E fill:#3B82F6,stroke:#2563EB,color:#fff
+    style F fill:#FBBF24,stroke:#F59E0B,color:#000
+    style G fill:#A855F7,stroke:#9333EA,color:#fff
+    style User fill:#D1FAE5,stroke:#10B981
+    style Route53 fill:#F0FDFA,stroke:#14B8A6
+    style S3 fill:#DBEAFE,stroke:#3B82F6
+    style Domain fill:#F3E8FF,stroke:#A855F7

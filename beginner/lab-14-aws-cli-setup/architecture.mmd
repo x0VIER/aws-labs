@@ -1,0 +1,48 @@
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#fff','primaryTextColor':'#000','primaryBorderColor':'#10B981','lineColor':'#666'}}}%%
+flowchart TB
+    subgraph Step1["① Install AWS CLI"]
+        A[Local Machine<br/>macOS/Linux/Windows]
+        B[AWS CLI v2<br/>Installed]
+    end
+    
+    subgraph Step2["② Create IAM User"]
+        C[IAM Console]
+        D[CLI User<br/>Programmatic Access]
+        E[Access Key ID<br/>Secret Access Key]
+    end
+    
+    subgraph Step3["③ Configure CLI"]
+        F[aws configure<br/>Command]
+        G[Credentials File<br/>~/.aws/credentials]
+        H[Config File<br/>~/.aws/config]
+    end
+    
+    subgraph Step4["④ Test CLI"]
+        I[Terminal<br/>aws s3 ls]
+        J[AWS API<br/>List S3 Buckets]
+    end
+    
+    A -->|"Install"| B
+    C -->|"Create"| D
+    D -->|"Generate"| E
+    E -->|"Enter credentials"| F
+    F -->|"Save to"| G
+    F -->|"Save region to"| H
+    B -->|"Execute command"| I
+    I -->|"API Call"| J
+    G -.->|"Authenticate"| J
+    
+    style A fill:#10B981,stroke:#059669,color:#fff
+    style B fill:#10B981,stroke:#059669,color:#fff
+    style C fill:#EF4444,stroke:#DC2626,color:#fff
+    style D fill:#3B82F6,stroke:#2563EB,color:#fff
+    style E fill:#FBBF24,stroke:#F59E0B,color:#000
+    style F fill:#A855F7,stroke:#9333EA,color:#fff
+    style G fill:#F97316,stroke:#EA580C,color:#fff
+    style H fill:#F97316,stroke:#EA580C,color:#fff
+    style I fill:#10B981,stroke:#059669,color:#fff
+    style J fill:#3B82F6,stroke:#2563EB,color:#fff
+    style Step1 fill:#D1FAE5,stroke:#10B981
+    style Step2 fill:#DBEAFE,stroke:#3B82F6
+    style Step3 fill:#F3E8FF,stroke:#A855F7
+    style Step4 fill:#D1FAE5,stroke:#10B981

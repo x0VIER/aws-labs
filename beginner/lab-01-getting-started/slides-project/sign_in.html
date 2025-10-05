@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
+    <style>
+      .slide-container {
+        width: 1280px;
+        min-height: 720px;
+        background: #FFFFFF;
+        color: #333333;
+        font-family: Arial, sans-serif;
+        padding: 40px;
+      }
+      .title {
+        font-size: 36px;
+        font-weight: bold;
+        color: #232F3E;
+        margin-bottom: 20px;
+      }
+      .subtitle {
+        font-size: 24px;
+        color: #FF9900;
+        margin-bottom: 30px;
+      }
+      .content {
+        font-size: 20px;
+      }
+      .step-container {
+        display: flex;
+        margin-bottom: 20px;
+      }
+      .step-number {
+        background-color: #FF9900;
+        color: white;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-right: 15px;
+        flex-shrink: 0;
+      }
+      .step-content {
+        flex: 1;
+      }
+      .info-box {
+        background-color: #f0f8ff;
+        border-left: 5px solid #232F3E;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 4px;
+      }
+      .success-box {
+        background-color: #f0fff0;
+        border-left: 5px solid #10B981;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 4px;
+      }
+      .footer {
+        position: relative;
+        bottom: 0;
+        font-size: 14px;
+        color: #666;
+        margin-top: 30px;
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="slide-container">
+      <h1 class="title">Step 4: Sign In as the IAM User</h1>
+      <h2 class="subtitle">Using your new administrative user</h2>
+      
+      <div class="content">
+        <p class="mb-6">Now that you've created an IAM user with administrative permissions, you should sign out of the root user account and sign in with your new IAM user.</p>
+        
+        <div class="step-container">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <p>In the top-right corner of the AWS Management Console, click on your account name and select <strong>Sign Out</strong>.</p>
+          </div>
+        </div>
+        
+        <div class="step-container">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <p>Use the unique console sign-in link from the <code>.csv</code> file you downloaded earlier. It will look like:</p>
+            <p class="text-blue-600 mt-2">https://123456789012.signin.aws.amazon.com/console</p>
+          </div>
+        </div>
+        
+        <div class="step-container">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <p>Enter the IAM user name (<code>aws-admin</code>) and the password you set.</p>
+          </div>
+        </div>
+        
+        <div class="step-container">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <p>Verify that you're logged in as the IAM user by checking the user name in the top-right corner.</p>
+          </div>
+        </div>
+        
+        <div class="info-box">
+          <p><strong>Tip:</strong> Bookmark your IAM user sign-in URL for easy access in the future.</p>
+        </div>
+        
+        <div class="success-box mt-6">
+          <p><strong>Security Best Practice:</strong> You are now following AWS security best practices by using an IAM user for your day-to-day AWS activities instead of the root user.</p>
+        </div>
+      </div>
+      
+      <div class="footer">
+        <p>Authored by V Vier</p>
+      </div>
+    </div>
+  </body>
+</html>

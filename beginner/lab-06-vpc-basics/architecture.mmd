@@ -1,0 +1,32 @@
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#fff','primaryTextColor':'#000','primaryBorderColor':'#14B8A6','lineColor':'#666'}}}%%
+flowchart TB
+    subgraph Internet["Internet"]
+        A[Internet Gateway<br/>IGW]
+    end
+    
+    subgraph VPC["My-Custom-VPC<br/>10.0.0.0/16"]
+        subgraph PublicSubnet["Public Subnet<br/>10.0.1.0/24"]
+            B[Public Route Table]
+            C[EC2 Instance<br/>with Public IP]
+        end
+        
+        subgraph PrivateSubnet["Private Subnet<br/>10.0.2.0/24"]
+            D[Private Route Table]
+            E[EC2 Instance<br/>No Public IP]
+        end
+    end
+    
+    A -->|"Route: 0.0.0.0/0"| B
+    B -->|"Internet Access"| C
+    C -->|"Can reach Internet"| A
+    D -->|"No Internet Route"| E
+    
+    style A fill:#14B8A6,stroke:#0D9488,color:#fff
+    style B fill:#FBBF24,stroke:#F59E0B,color:#000
+    style C fill:#10B981,stroke:#059669,color:#fff
+    style D fill:#F97316,stroke:#EA580C,color:#fff
+    style E fill:#EF4444,stroke:#DC2626,color:#fff
+    style PublicSubnet fill:#D1FAE5,stroke:#10B981
+    style PrivateSubnet fill:#FEE2E2,stroke:#EF4444
+    style VPC fill:#F0FDFA,stroke:#14B8A6
+    style Internet fill:#DBEAFE,stroke:#3B82F6

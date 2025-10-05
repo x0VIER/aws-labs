@@ -1,0 +1,77 @@
+flowchart TB
+    %% Define styles
+    classDef vpc fill:#E8F4FA,stroke:#1A73E8,stroke-width:2px
+    classDef subnet fill:#F2F9FF,stroke:#1A73E8,stroke-width:1px
+    classDef instance fill:#FFFFFF,stroke:#1A73E8,stroke-width:1px
+    classDef igw fill:#FFFFFF,stroke:#1A73E8,stroke-width:1px
+    classDef sg fill:#F8F9FA,stroke:#1A73E8,stroke-width:1px,stroke-dasharray: 5 5
+    classDef rt fill:#F8F9FA,stroke:#1A73E8,stroke-width:1px
+    
+    classDef vpc2 fill:#E6F4EA,stroke:#0F9D58,stroke-width:2px
+    classDef subnet2 fill:#F2F9F6,stroke:#0F9D58,stroke-width:1px
+    classDef instance2 fill:#FFFFFF,stroke:#0F9D58,stroke-width:1px
+    classDef igw2 fill:#FFFFFF,stroke:#0F9D58,stroke-width:1px
+    classDef sg2 fill:#F8F9FA,stroke:#0F9D58,stroke-width:1px,stroke-dasharray: 5 5
+    classDef rt2 fill:#F8F9FA,stroke:#0F9D58,stroke-width:1px
+    
+    classDef peering fill:#F3E5F5,stroke:#9C27B0,stroke-width:2px,stroke-dasharray: 5 5
+    
+    %% Define VPC-A components
+    subgraph VPCA[VPC-A: 10.0.0.0/16]
+        IGWA[Internet Gateway]
+        SubnetA[Subnet: 10.0.1.0/24]
+        EC2A[EC2 Instance]
+        SGA[Security Group]
+        RTA[Route Table<br>10.0.0.0/16 → local<br>0.0.0.0/0 → IGW<br>172.16.0.0/16 → Peering]
+    end
+    
+    %% Define VPC-B components
+    subgraph VPCB[VPC-B: 172.16.0.0/16]
+        IGWB[Internet Gateway]
+        SubnetB[Subnet: 172.16.1.0/24]
+        EC2B[EC2 Instance]
+        SGB[Security Group]
+        RTB[Route Table<br>172.16.0.0/16 → local<br>0.0.0.0/0 → IGW<br>10.0.0.0/16 → Peering]
+    end
+    
+    %% Define VPC Peering connection
+    Peering[VPC Peering Connection]
+    
+    %% Define connections
+    IGWA --- SubnetA
+    SubnetA --- EC2A
+    EC2A --- SGA
+    SubnetA --- RTA
+    
+    IGWB --- SubnetB
+    SubnetB --- EC2B
+    EC2B --- SGB
+    SubnetB --- RTB
+    
+    VPCA --- Peering --- VPCB
+    
+    %% Apply styles
+    class VPCA vpc
+    class SubnetA subnet
+    class EC2A instance
+    class IGWA igw
+    class SGA sg
+    class RTA rt
+    
+    class VPCB vpc2
+    class SubnetB subnet2
+    class EC2B instance2
+    class IGWB igw2
+    class SGB sg2
+    class RTB rt2
+    
+    class Peering peering
+    
+    %% Add annotations
+    note1[VPC Peering allows direct communication<br>between instances in different VPCs<br>using private IP addresses]
+    note2[Route tables in both VPCs must be updated<br>to route traffic to the peered VPC]
+    note3[Security groups must allow traffic<br>from the peered VPC's CIDR block]
+    
+    %% Add author credit
+    author[Authored by V Vier]
+    style author fill:none,stroke:none

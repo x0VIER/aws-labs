@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
+    <style>
+      .slide-container {
+        width: 1280px;
+        min-height: 720px;
+        background: #FFFFFF;
+        color: #333333;
+        font-family: Arial, sans-serif;
+        padding: 40px;
+      }
+      .title {
+        font-size: 36px;
+        font-weight: bold;
+        color: #232F3E;
+        margin-bottom: 15px;
+      }
+      .subtitle {
+        font-size: 24px;
+        color: #FF9900;
+        margin-bottom: 20px;
+      }
+      .content {
+        font-size: 20px;
+        display: flex;
+        gap: 40px;
+      }
+      .column {
+        flex: 1;
+      }
+      .step-container {
+        display: flex;
+        margin-bottom: 12px;
+      }
+      .step-number {
+        background-color: #FF9900;
+        color: white;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-right: 15px;
+        flex-shrink: 0;
+      }
+      .step-content {
+        flex: 1;
+      }
+      .storage-class {
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 4px;
+      }
+      .footer {
+        font-size: 14px;
+        color: #666;
+        margin-top: 15px;
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="slide-container">
+      <h1 class="title">Step 4: Configure a Lifecycle Policy</h1>
+      <h2 class="subtitle">Automating object transitions and expirations</h2>
+      
+      <div class="content">
+        <div class="column">
+          <p class="mb-3">Lifecycle policies automatically transition objects between storage classes or delete them based on defined rules.</p>
+          
+          <div class="step-container">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <p>In your bucket, go to the <strong>Management</strong> tab.</p>
+            </div>
+          </div>
+          
+          <div class="step-container">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <p>Click <strong>Create lifecycle rule</strong>.</p>
+            </div>
+          </div>
+          
+          <div class="step-container">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <p>Enter a <strong>Rule name</strong> (e.g., <code>archive-old-files</code>).</p>
+            </div>
+          </div>
+          
+          <div class="step-container">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <p>Define the <strong>rule scope</strong> (apply to all objects or filter by prefix/tags).</p>
+            </div>
+          </div>
+          
+          <div class="step-container">
+            <div class="step-number">5</div>
+            <div class="step-content">
+              <p>Configure <strong>transitions</strong> (e.g., move to Glacier after 90 days).</p>
+            </div>
+          </div>
+          
+          <div class="step-container">
+            <div class="step-number">6</div>
+            <div class="step-content">
+              <p>Set <strong>expiration</strong> rules if needed (e.g., delete after 365 days).</p>
+            </div>
+          </div>
+          
+          <div class="step-container">
+            <div class="step-number">7</div>
+            <div class="step-content">
+              <p>Review and click <strong>Create rule</strong>.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="column">
+          <div style="height: 300px;">
+            <canvas id="storageClassChart"></canvas>
+          </div>
+          
+          <p class="mt-4"><strong>Common Storage Class Transitions:</strong></p>
+          
+          <div class="storage-class bg-blue-100 border-l-4 border-blue-500">
+            <strong>Standard → Standard-IA:</strong> For data accessed less than once a month
+          </div>
+          
+          <div class="storage-class bg-green-100 border-l-4 border-green-500">
+            <strong>Standard-IA → Glacier:</strong> For long-term archival with occasional access
+          </div>
+          
+          <div class="storage-class bg-yellow-100 border-l-4 border-yellow-500">
+            <strong>Any Class → Glacier Deep Archive:</strong> For data that rarely needs to be accessed
+          </div>
+        </div>
+      </div>
+      
+      <div class="footer">
+        <p>Authored by V Vier</p>
+      </div>
+    </div>
+    
+    <script>
+      // Chart showing storage class cost comparison
+      const ctx = document.getElementById('storageClassChart').getContext('2d');
+      const storageClassChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Standard', 'Standard-IA', 'One Zone-IA', 'Glacier', 'Deep Archive'],
+          datasets: [{
+            label: 'Storage Cost ($ per GB per month)',
+            data: [0.023, 0.0125, 0.01, 0.004, 0.00099],
+            backgroundColor: [
+              '#3B82F6',
+              '#10B981',
+              '#F97316',
+              '#A855F7',
+              '#FBBF24'
+            ],
+            borderColor: [
+              '#2563EB',
+              '#059669',
+              '#EA580C',
+              '#9333EA',
+              '#F59E0B'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            title: {
+              display: true,
+              text: 'S3 Storage Class Cost Comparison (US East)',
+              font: {
+                size: 16
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: '$ per GB per month'
+              }
+            }
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

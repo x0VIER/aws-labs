@@ -1,0 +1,183 @@
+{
+  "title": "CloudFront CDN Architecture",
+  "description": "Architecture diagram showing CloudFront distribution with S3 origin and global edge locations",
+  "layout": {
+    "orientation": "horizontal",
+    "components": [
+      {
+        "type": "users",
+        "name": "Global Users",
+        "position": "left",
+        "icon": "users",
+        "locations": ["North America", "Europe", "Asia", "Australia", "South America"]
+      },
+      {
+        "type": "edge-locations",
+        "name": "CloudFront Edge Locations",
+        "position": "middle-left",
+        "icon": "cloudfront",
+        "locations": [
+          {
+            "name": "North America",
+            "count": "Multiple locations",
+            "position": "top"
+          },
+          {
+            "name": "Europe",
+            "count": "Multiple locations",
+            "position": "middle-top"
+          },
+          {
+            "name": "Asia",
+            "count": "Multiple locations",
+            "position": "middle"
+          },
+          {
+            "name": "Australia",
+            "count": "Multiple locations",
+            "position": "middle-bottom"
+          },
+          {
+            "name": "South America",
+            "count": "Multiple locations",
+            "position": "bottom"
+          }
+        ]
+      },
+      {
+        "type": "distribution",
+        "name": "CloudFront Distribution",
+        "position": "middle",
+        "icon": "cloudfront-distribution",
+        "components": [
+          {
+            "type": "cache-behavior",
+            "name": "Default Cache Behavior",
+            "path": "/*",
+            "ttl": "86400s (24h)"
+          },
+          {
+            "type": "cache-behavior",
+            "name": "Images Cache Behavior",
+            "path": "/images/*",
+            "ttl": "604800s (7d)"
+          },
+          {
+            "type": "error-response",
+            "name": "Custom Error Response",
+            "error-code": "404",
+            "response-page": "/error.html"
+          },
+          {
+            "type": "origin-access-identity",
+            "name": "Origin Access Identity",
+            "description": "Secure S3 access"
+          }
+        ]
+      },
+      {
+        "type": "cloud",
+        "name": "AWS Cloud",
+        "position": "right",
+        "components": [
+          {
+            "type": "region",
+            "name": "AWS Region",
+            "position": "container",
+            "components": [
+              {
+                "type": "s3-bucket",
+                "name": "S3 Origin Bucket",
+                "position": "middle",
+                "icon": "s3",
+                "objects": [
+                  {
+                    "name": "index.html",
+                    "type": "html"
+                  },
+                  {
+                    "name": "error.html",
+                    "type": "html"
+                  },
+                  {
+                    "name": "sample-image.jpg",
+                    "type": "image"
+                  }
+                ],
+                "policy": "Allow CloudFront OAI access"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "flows": [
+    {
+      "source": "Global Users",
+      "target": "CloudFront Edge Locations",
+      "label": "1. User requests content",
+      "style": "solid"
+    },
+    {
+      "source": "CloudFront Edge Locations",
+      "target": "CloudFront Distribution",
+      "label": "2. Check cache",
+      "style": "solid"
+    },
+    {
+      "source": "CloudFront Distribution",
+      "target": "S3 Origin Bucket",
+      "label": "3. Fetch content if not cached",
+      "style": "dashed"
+    },
+    {
+      "source": "CloudFront Edge Locations",
+      "target": "Global Users",
+      "label": "4. Return cached content",
+      "style": "solid"
+    }
+  ],
+  "legend": {
+    "items": [
+      {
+        "icon": "cloudfront",
+        "label": "CloudFront Edge Location"
+      },
+      {
+        "icon": "cloudfront-distribution",
+        "label": "CloudFront Distribution"
+      },
+      {
+        "icon": "s3",
+        "label": "S3 Origin Bucket"
+      },
+      {
+        "style": "solid",
+        "label": "Regular request flow"
+      },
+      {
+        "style": "dashed",
+        "label": "Cache miss flow"
+      }
+    ]
+  },
+  "notes": [
+    {
+      "text": "CloudFront caches content at edge locations close to users for faster delivery",
+      "position": "bottom"
+    },
+    {
+      "text": "Origin Access Identity ensures S3 content is only accessible through CloudFront",
+      "position": "bottom"
+    },
+    {
+      "text": "Different cache behaviors can be configured for different content types",
+      "position": "bottom"
+    }
+  ],
+  "metadata": {
+    "author": "V Vier",
+    "version": "1.0"
+  }
+}

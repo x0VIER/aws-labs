@@ -1,0 +1,36 @@
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#fff','primaryTextColor':'#000','primaryBorderColor':'#10B981','lineColor':'#666'}}}%%
+flowchart TB
+    subgraph VPC["VPC"]
+        subgraph PublicSubnet["Public Subnet"]
+            A[EC2 Instance<br/>Application Server]
+        end
+        
+        subgraph PrivateSubnet1["Private Subnet 1<br/>AZ-1"]
+            B[RDS Instance<br/>MySQL/PostgreSQL]
+        end
+        
+        subgraph PrivateSubnet2["Private Subnet 2<br/>AZ-2"]
+            C[RDS Standby<br/>Multi-AZ]
+        end
+        
+        D[DB Subnet Group]
+        E[Security Group<br/>Port 3306/5432]
+    end
+    
+    F[Database Client<br/>MySQL Workbench] -->|"Connect via endpoint"| A
+    A -->|"Database queries"| E
+    E -->|"Allow traffic"| B
+    D -.->|"Contains"| PrivateSubnet1
+    D -.->|"Contains"| PrivateSubnet2
+    B -.->|"Replication"| C
+    
+    style A fill:#F97316,stroke:#EA580C,color:#fff
+    style B fill:#10B981,stroke:#059669,color:#fff
+    style C fill:#10B981,stroke:#059669,color:#fff
+    style D fill:#3B82F6,stroke:#2563EB,color:#fff
+    style E fill:#EF4444,stroke:#DC2626,color:#fff
+    style F fill:#FBBF24,stroke:#F59E0B,color:#000
+    style PublicSubnet fill:#FFEDD5,stroke:#F97316
+    style PrivateSubnet1 fill:#D1FAE5,stroke:#10B981
+    style PrivateSubnet2 fill:#D1FAE5,stroke:#10B981
+    style VPC fill:#F0FDFA,stroke:#14B8A6

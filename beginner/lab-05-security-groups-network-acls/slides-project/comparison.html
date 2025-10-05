@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
+    <style>
+      .slide-container {
+        width: 1280px;
+        min-height: 720px;
+        background: #FFFFFF;
+        color: #333333;
+        font-family: Arial, sans-serif;
+        padding: 40px;
+      }
+      .title {
+        font-size: 36px;
+        font-weight: bold;
+        color: #232F3E;
+        margin-bottom: 15px;
+      }
+      .subtitle {
+        font-size: 24px;
+        color: #FF9900;
+        margin-bottom: 20px;
+      }
+      .content {
+        font-size: 20px;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      .comparison-table th {
+        background-color: #232F3E;
+        color: #FFFFFF;
+        padding: 12px;
+        text-align: left;
+        border: 1px solid #ddd;
+      }
+      .comparison-table td {
+        padding: 12px;
+        border: 1px solid #ddd;
+      }
+      .comparison-table tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+      .sg-color {
+        color: #3B82F6;
+        font-weight: bold;
+      }
+      .nacl-color {
+        color: #10B981;
+        font-weight: bold;
+      }
+      .footer {
+        font-size: 14px;
+        color: #666;
+        margin-top: 15px;
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="slide-container">
+      <h1 class="title">Step 5: Compare Security Groups and NACLs</h1>
+      <h2 class="subtitle">Understanding the key differences</h2>
+      
+      <div class="content">
+        <p class="mb-4">Security Groups and Network ACLs serve different purposes in your AWS network security strategy. Understanding their differences is crucial for implementing effective security controls.</p>
+        
+        <table class="comparison-table">
+          <tr>
+            <th>Feature</th>
+            <th><span class="sg-color">Security Groups</span></th>
+            <th><span class="nacl-color">Network ACLs</span></th>
+          </tr>
+          <tr>
+            <td><strong>Scope</strong></td>
+            <td>Instance level</td>
+            <td>Subnet level</td>
+          </tr>
+          <tr>
+            <td><strong>State</strong></td>
+            <td>Stateful (return traffic automatically allowed)</td>
+            <td>Stateless (return traffic must be explicitly allowed)</td>
+          </tr>
+          <tr>
+            <td><strong>Rule Types</strong></td>
+            <td>Allow rules only</td>
+            <td>Allow and deny rules</td>
+          </tr>
+          <tr>
+            <td><strong>Rule Evaluation</strong></td>
+            <td>All rules are evaluated before deciding</td>
+            <td>Rules are evaluated in order (lowest number first)</td>
+          </tr>
+          <tr>
+            <td><strong>Default Configuration</strong></td>
+            <td>All outbound allowed, no inbound allowed</td>
+            <td>Default NACL allows all inbound and outbound traffic</td>
+          </tr>
+          <tr>
+            <td><strong>Application</strong></td>
+            <td>Automatically applies to all instances in the group</td>
+            <td>Automatically applies to all instances in the subnet</td>
+          </tr>
+        </table>
+        
+        <div style="height: 200px; margin-top: 20px;">
+          <canvas id="comparisonChart"></canvas>
+        </div>
+      </div>
+      
+      <div class="footer">
+        <p>Authored by V Vier</p>
+      </div>
+    </div>
+    
+    <script>
+      // Chart showing security layers
+      const ctx = document.getElementById('comparisonChart').getContext('2d');
+      const comparisonChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Granularity', 'Ease of Use', 'Flexibility', 'Troubleshooting'],
+          datasets: [
+            {
+              label: 'Security Groups',
+              data: [8, 9, 7, 8],
+              backgroundColor: '#3B82F6',
+              borderColor: '#2563EB',
+              borderWidth: 1
+            },
+            {
+              label: 'Network ACLs',
+              data: [6, 7, 9, 6],
+              backgroundColor: '#10B981',
+              borderColor: '#059669',
+              borderWidth: 1
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            title: {
+              display: true,
+              text: 'Security Groups vs Network ACLs Comparison',
+              font: {
+                size: 16
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 10,
+              title: {
+                display: true,
+                text: 'Rating (1-10)'
+              }
+            }
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

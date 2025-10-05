@@ -1,0 +1,42 @@
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#fff','primaryTextColor':'#000','primaryBorderColor':'#F97316','lineColor':'#666'}}}%%
+flowchart TB
+    subgraph Resources["AWS Resources"]
+        A[EC2 Instance]
+        B[RDS Database]
+        C[Lambda Function]
+    end
+    
+    subgraph CloudWatch["CloudWatch"]
+        D[Metrics<br/>CPUUtilization<br/>NetworkIn/Out<br/>DiskReadOps]
+        E[Alarms<br/>High CPU > 70%]
+        F[Dashboard<br/>Custom Widgets]
+        G[Logs<br/>Application Logs]
+    end
+    
+    subgraph Notifications["Notifications"]
+        H[SNS Topic]
+        I[Email Alert]
+    end
+    
+    A -->|"Send metrics"| D
+    B -->|"Send metrics"| D
+    C -->|"Send metrics"| D
+    D -->|"Evaluate threshold"| E
+    E -->|"Alarm triggered"| H
+    H -->|"Notify"| I
+    D -->|"Visualize"| F
+    A -->|"Application logs"| G
+    C -->|"Function logs"| G
+    
+    style A fill:#F97316,stroke:#EA580C,color:#fff
+    style B fill:#10B981,stroke:#059669,color:#fff
+    style C fill:#A855F7,stroke:#9333EA,color:#fff
+    style D fill:#3B82F6,stroke:#2563EB,color:#fff
+    style E fill:#EF4444,stroke:#DC2626,color:#fff
+    style F fill:#FBBF24,stroke:#F59E0B,color:#000
+    style G fill:#3B82F6,stroke:#2563EB,color:#fff
+    style H fill:#F97316,stroke:#EA580C,color:#fff
+    style I fill:#10B981,stroke:#059669,color:#fff
+    style Resources fill:#FFEDD5,stroke:#F97316
+    style CloudWatch fill:#DBEAFE,stroke:#3B82F6
+    style Notifications fill:#D1FAE5,stroke:#10B981

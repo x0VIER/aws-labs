@@ -1,0 +1,138 @@
+{
+  "title": "VPC Peering Architecture",
+  "description": "Architecture diagram showing VPC peering connection between two VPCs in AWS",
+  "layout": {
+    "orientation": "horizontal",
+    "components": [
+      {
+        "type": "vpc",
+        "name": "VPC-A",
+        "cidr": "10.0.0.0/16",
+        "position": "left",
+        "color": "blue",
+        "components": [
+          {
+            "type": "subnet",
+            "name": "VPC-A-Subnet",
+            "cidr": "10.0.1.0/24",
+            "position": "center"
+          },
+          {
+            "type": "instance",
+            "name": "VPC-A-Instance",
+            "position": "center",
+            "icon": "ec2"
+          },
+          {
+            "type": "gateway",
+            "name": "Internet Gateway",
+            "position": "top",
+            "icon": "internet-gateway"
+          },
+          {
+            "type": "security-group",
+            "name": "VPC-A-SG",
+            "position": "right",
+            "rules": ["SSH (22)", "ICMP"]
+          },
+          {
+            "type": "route-table",
+            "name": "VPC-A-RT",
+            "position": "bottom",
+            "routes": [
+              "10.0.0.0/16 -> local",
+              "0.0.0.0/0 -> IGW",
+              "172.16.0.0/16 -> Peering"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "connection",
+        "name": "VPC Peering Connection",
+        "source": "VPC-A",
+        "target": "VPC-B",
+        "color": "purple",
+        "style": "dashed",
+        "label": "VPC Peering"
+      },
+      {
+        "type": "vpc",
+        "name": "VPC-B",
+        "cidr": "172.16.0.0/16",
+        "position": "right",
+        "color": "green",
+        "components": [
+          {
+            "type": "subnet",
+            "name": "VPC-B-Subnet",
+            "cidr": "172.16.1.0/24",
+            "position": "center"
+          },
+          {
+            "type": "instance",
+            "name": "VPC-B-Instance",
+            "position": "center",
+            "icon": "ec2"
+          },
+          {
+            "type": "gateway",
+            "name": "Internet Gateway",
+            "position": "top",
+            "icon": "internet-gateway"
+          },
+          {
+            "type": "security-group",
+            "name": "VPC-B-SG",
+            "position": "left",
+            "rules": ["SSH (22)", "ICMP"]
+          },
+          {
+            "type": "route-table",
+            "name": "VPC-B-RT",
+            "position": "bottom",
+            "routes": [
+              "172.16.0.0/16 -> local",
+              "0.0.0.0/0 -> IGW",
+              "10.0.0.0/16 -> Peering"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "legend": {
+    "items": [
+      {
+        "color": "blue",
+        "label": "VPC-A (10.0.0.0/16)"
+      },
+      {
+        "color": "green",
+        "label": "VPC-B (172.16.0.0/16)"
+      },
+      {
+        "color": "purple",
+        "label": "VPC Peering Connection"
+      }
+    ]
+  },
+  "notes": [
+    {
+      "text": "VPC Peering allows direct communication between instances in different VPCs using private IP addresses",
+      "position": "bottom"
+    },
+    {
+      "text": "Route tables in both VPCs must be updated to route traffic to the peered VPC",
+      "position": "bottom"
+    },
+    {
+      "text": "Security groups must allow traffic from the peered VPC's CIDR block",
+      "position": "bottom"
+    }
+  ],
+  "metadata": {
+    "author": "V Vier",
+    "version": "1.0"
+  }
+}

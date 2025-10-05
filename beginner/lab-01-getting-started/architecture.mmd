@@ -1,0 +1,31 @@
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#fff','primaryTextColor':'#000','primaryBorderColor':'#3B82F6','lineColor':'#666','secondaryColor':'#F97316','tertiaryColor':'#EF4444'}}}%%
+flowchart TB
+    subgraph Step1["① Create AWS Account"]
+        A[Root User<br/>🛡️]
+    end
+    
+    subgraph Step2["② Set Up Billing Alarm"]
+        B[CloudWatch<br/>📊]
+        C[SNS Topic<br/>📧]
+    end
+    
+    subgraph Step3["③ Create IAM User"]
+        D[IAM Service<br/>🔐]
+        E[Admin User<br/>👤]
+    end
+    
+    A -->|"Account Created"| B
+    B -->|"Cost Alert > $10"| C
+    C -->|"Email Notification"| F[Your Email]
+    A -->|"Create IAM User"| D
+    D -->|"AdministratorAccess Policy"| E
+    E -->|"Daily Operations"| G[AWS Console]
+    
+    style A fill:#EF4444,stroke:#C81E1E,color:#fff
+    style B fill:#F97316,stroke:#EA580C,color:#fff
+    style C fill:#F97316,stroke:#EA580C,color:#fff
+    style D fill:#3B82F6,stroke:#2563EB,color:#fff
+    style E fill:#3B82F6,stroke:#2563EB,color:#fff
+    style Step1 fill:#FEE2E2,stroke:#EF4444
+    style Step2 fill:#FFEDD5,stroke:#F97316
+    style Step3 fill:#DBEAFE,stroke:#3B82F6

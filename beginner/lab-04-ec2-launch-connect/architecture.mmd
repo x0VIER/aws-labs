@@ -1,0 +1,43 @@
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#fff','primaryTextColor':'#000','primaryBorderColor':'#F97316','lineColor':'#666'}}}%%
+flowchart TB
+    subgraph Step1["① Create Key Pair"]
+        A[EC2 Key Pair<br/>🔑 my-ec2-key.pem]
+    end
+    
+    subgraph Step2["② Launch EC2 Instance"]
+        B[AMI Selection<br/>📀 Amazon Linux 2]
+        C[Instance Type<br/>💻 t2.micro]
+        D[Security Group<br/>🛡️ Allow SSH Port 22]
+    end
+    
+    subgraph Step3["③ Running Instance"]
+        E[EC2 Instance<br/>🖥️ i-0123456789abcdef0]
+        F[Public IP<br/>🌐 54.123.45.67]
+    end
+    
+    subgraph Step4["④ SSH Connection"]
+        G[Local Terminal<br/>💻]
+        H[SSH Client<br/>🔐]
+    end
+    
+    A -->|"Used for authentication"| B
+    B --> C
+    C --> D
+    D -->|"Instance Launched"| E
+    E -->|"Assigned"| F
+    G -->|"ssh -i my-ec2-key.pem"| H
+    H -->|"Connect via Port 22"| E
+    A -.->|"Private key required"| H
+    
+    style A fill:#FBBF24,stroke:#F59E0B,color:#000
+    style B fill:#F97316,stroke:#EA580C,color:#fff
+    style C fill:#F97316,stroke:#EA580C,color:#fff
+    style D fill:#EF4444,stroke:#DC2626,color:#fff
+    style E fill:#F97316,stroke:#EA580C,color:#fff
+    style F fill:#3B82F6,stroke:#2563EB,color:#fff
+    style G fill:#10B981,stroke:#059669,color:#fff
+    style H fill:#10B981,stroke:#059669,color:#fff
+    style Step1 fill:#FEF3C7,stroke:#FBBF24
+    style Step2 fill:#FFEDD5,stroke:#F97316
+    style Step3 fill:#FFEDD5,stroke:#F97316
+    style Step4 fill:#D1FAE5,stroke:#10B981

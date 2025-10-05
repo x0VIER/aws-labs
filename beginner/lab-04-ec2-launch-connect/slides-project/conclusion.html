@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
+    <style>
+      .slide-container {
+        width: 1280px;
+        min-height: 720px;
+        background: #FFFFFF;
+        color: #333333;
+        font-family: Arial, sans-serif;
+        padding: 40px;
+      }
+      .title {
+        font-size: 36px;
+        font-weight: bold;
+        color: #232F3E;
+        margin-bottom: 20px;
+      }
+      .subtitle {
+        font-size: 24px;
+        color: #FF9900;
+        margin-bottom: 30px;
+      }
+      .content {
+        font-size: 20px;
+      }
+      .summary-box {
+        background-color: #f0f8ff;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 30px;
+        border-left: 5px solid #FF9900;
+      }
+      .next-steps {
+        display: flex;
+        gap: 30px;
+        margin-top: 30px;
+      }
+      .next-step-item {
+        flex: 1;
+        padding: 15px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        border-top: 4px solid #232F3E;
+      }
+      .footer {
+        font-size: 14px;
+        color: #666;
+        margin-top: 30px;
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="slide-container">
+      <h1 class="title">Conclusion</h1>
+      <h2 class="subtitle">Key takeaways and next steps</h2>
+      
+      <div class="content">
+        <div class="summary-box">
+          <p class="font-bold mb-2">In this lab, you have learned how to:</p>
+          <ul class="list-disc ml-6">
+            <li class="mb-2">Launch an EC2 instance with appropriate settings</li>
+            <li class="mb-2">Create and manage SSH key pairs</li>
+            <li class="mb-2">Connect to your instance using SSH</li>
+            <li class="mb-2">Use EC2 Instance Connect for browser-based access</li>
+          </ul>
+        </div>
+        
+        <p class="mb-4"><strong>EC2 Best Practices:</strong></p>
+        <ul class="list-disc ml-6 mb-6">
+          <li class="mb-2">Use security groups to control inbound and outbound traffic</li>
+          <li class="mb-2">Store private keys securely and never share them</li>
+          <li class="mb-2">Use IAM roles instead of storing AWS credentials on instances</li>
+          <li class="mb-2">Regularly patch and update your instances</li>
+          <li class="mb-2">Use Amazon Machine Images (AMIs) to back up your instances</li>
+        </ul>
+        
+        <div class="next-steps">
+          <div class="next-step-item">
+            <h3 class="text-xl font-bold mb-2 text-blue-700">Next Lab</h3>
+            <p>Continue to Lab 5: Security Groups & Network ACLs to learn about network security in AWS.</p>
+          </div>
+          <div class="next-step-item">
+            <h3 class="text-xl font-bold mb-2 text-blue-700">Further Learning</h3>
+            <p>Explore EC2 Auto Scaling, Elastic Load Balancing, and different instance purchasing options.</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="footer">
+        <p>Authored by V Vier</p>
+      </div>
+    </div>
+  </body>
+</html>

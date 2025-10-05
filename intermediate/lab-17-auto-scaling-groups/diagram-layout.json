@@ -1,0 +1,192 @@
+{
+  "title": "Auto Scaling Groups Architecture",
+  "description": "Architecture diagram showing Auto Scaling Group deployment across multiple Availability Zones",
+  "layout": {
+    "orientation": "vertical",
+    "components": [
+      {
+        "type": "cloud",
+        "name": "AWS Cloud",
+        "position": "container",
+        "components": [
+          {
+            "type": "region",
+            "name": "AWS Region",
+            "position": "container",
+            "components": [
+              {
+                "type": "vpc",
+                "name": "ASG-Lab-VPC",
+                "cidr": "10.0.0.0/16",
+                "position": "container",
+                "components": [
+                  {
+                    "type": "availability-zone",
+                    "name": "Availability Zone 1",
+                    "position": "left",
+                    "components": [
+                      {
+                        "type": "subnet",
+                        "name": "Public Subnet 1",
+                        "cidr": "10.0.1.0/24",
+                        "position": "top"
+                      },
+                      {
+                        "type": "instance",
+                        "name": "EC2 Instance 1",
+                        "position": "bottom",
+                        "icon": "ec2",
+                        "status": "running"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "availability-zone",
+                    "name": "Availability Zone 2",
+                    "position": "right",
+                    "components": [
+                      {
+                        "type": "subnet",
+                        "name": "Public Subnet 2",
+                        "cidr": "10.0.2.0/24",
+                        "position": "top"
+                      },
+                      {
+                        "type": "instance",
+                        "name": "EC2 Instance 2",
+                        "position": "bottom",
+                        "icon": "ec2",
+                        "status": "running"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "gateway",
+                    "name": "Internet Gateway",
+                    "position": "top",
+                    "icon": "internet-gateway"
+                  },
+                  {
+                    "type": "security-group",
+                    "name": "ASG-Lab-SG",
+                    "position": "middle",
+                    "rules": ["HTTP (80)", "SSH (22)"]
+                  },
+                  {
+                    "type": "auto-scaling",
+                    "name": "Auto Scaling Group",
+                    "position": "middle",
+                    "config": {
+                      "min": 1,
+                      "max": 4,
+                      "desired": 2
+                    }
+                  },
+                  {
+                    "type": "launch-template",
+                    "name": "Launch Template",
+                    "position": "bottom",
+                    "config": {
+                      "ami": "Amazon Linux 2",
+                      "instance-type": "t2.micro"
+                    }
+                  },
+                  {
+                    "type": "cloudwatch",
+                    "name": "CloudWatch Alarm",
+                    "position": "right",
+                    "metric": "CPU Utilization > 50%"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "flows": [
+    {
+      "source": "Internet Gateway",
+      "target": "Public Subnet 1",
+      "label": "Traffic",
+      "style": "solid"
+    },
+    {
+      "source": "Internet Gateway",
+      "target": "Public Subnet 2",
+      "label": "Traffic",
+      "style": "solid"
+    },
+    {
+      "source": "Auto Scaling Group",
+      "target": "EC2 Instance 1",
+      "label": "Manages",
+      "style": "dashed"
+    },
+    {
+      "source": "Auto Scaling Group",
+      "target": "EC2 Instance 2",
+      "label": "Manages",
+      "style": "dashed"
+    },
+    {
+      "source": "Launch Template",
+      "target": "Auto Scaling Group",
+      "label": "Uses",
+      "style": "dashed"
+    },
+    {
+      "source": "CloudWatch Alarm",
+      "target": "Auto Scaling Group",
+      "label": "Triggers",
+      "style": "dashed"
+    }
+  ],
+  "legend": {
+    "items": [
+      {
+        "icon": "ec2",
+        "label": "EC2 Instance"
+      },
+      {
+        "icon": "auto-scaling",
+        "label": "Auto Scaling Group"
+      },
+      {
+        "icon": "cloudwatch",
+        "label": "CloudWatch Alarm"
+      },
+      {
+        "icon": "launch-template",
+        "label": "Launch Template"
+      }
+    ]
+  },
+  "steps": [
+    {
+      "number": 1,
+      "description": "Create VPC with public subnets",
+      "target": "ASG-Lab-VPC"
+    },
+    {
+      "number": 2,
+      "description": "Create Launch Template",
+      "target": "Launch Template"
+    },
+    {
+      "number": 3,
+      "description": "Create Auto Scaling Group",
+      "target": "Auto Scaling Group"
+    },
+    {
+      "number": 4,
+      "description": "Configure scaling policies",
+      "target": "CloudWatch Alarm"
+    }
+  ],
+  "metadata": {
+    "author": "V Vier",
+    "version": "1.0"
+  }
+}

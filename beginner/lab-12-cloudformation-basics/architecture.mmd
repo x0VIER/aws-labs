@@ -1,0 +1,40 @@
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#fff','primaryTextColor':'#000','primaryBorderColor':'#F97316','lineColor':'#666'}}}%%
+flowchart TB
+    subgraph Step1["① Write Template"]
+        A[YAML Template<br/>s3-bucket-template.yaml]
+        B[Resource Definition<br/>AWS::S3::Bucket]
+    end
+    
+    subgraph Step2["② Create Stack"]
+        C[CloudFormation Service]
+        D[Stack<br/>my-s3-stack]
+    end
+    
+    subgraph Step3["③ Provisioned Resources"]
+        E[S3 Bucket<br/>cf-test-bucket-123456789012]
+    end
+    
+    subgraph Step4["④ Delete Stack"]
+        F[Delete Operation]
+        G[Resources Cleaned Up]
+    end
+    
+    A -->|"Contains"| B
+    A -->|"Upload to"| C
+    C -->|"Create"| D
+    D -->|"Provision"| E
+    D -->|"Trigger"| F
+    F -->|"Remove"| E
+    E -.->|"Deleted"| G
+    
+    style A fill:#FBBF24,stroke:#F59E0B,color:#000
+    style B fill:#FBBF24,stroke:#F59E0B,color:#000
+    style C fill:#F97316,stroke:#EA580C,color:#fff
+    style D fill:#F97316,stroke:#EA580C,color:#fff
+    style E fill:#3B82F6,stroke:#2563EB,color:#fff
+    style F fill:#EF4444,stroke:#DC2626,color:#fff
+    style G fill:#10B981,stroke:#059669,color:#fff
+    style Step1 fill:#FEF3C7,stroke:#FBBF24
+    style Step2 fill:#FFEDD5,stroke:#F97316
+    style Step3 fill:#DBEAFE,stroke:#3B82F6
+    style Step4 fill:#FEE2E2,stroke:#EF4444

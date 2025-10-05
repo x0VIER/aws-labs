@@ -1,0 +1,109 @@
+flowchart TB
+    %% Define styles
+    classDef vpc fill:#E8F4FA,stroke:#1A73E8,stroke-width:2px
+    classDef publicSubnet fill:#B3E0FF,stroke:#1A73E8,stroke-width:1px
+    classDef privateSubnet fill:#B9F6CA,stroke:#0F9D58,stroke-width:1px
+    classDef instance fill:#FFFFFF,stroke:#1A73E8,stroke-width:1px
+    classDef igw fill:#FFFFFF,stroke:#1A73E8,stroke-width:1px
+    classDef nat fill:#FFFFFF,stroke:#FB8C00,stroke-width:1px
+    classDef sg fill:#F8F9FA,stroke:#1A73E8,stroke-width:1px,stroke-dasharray: 5 5
+    classDef alb fill:#FFE0B2,stroke:#FB8C00,stroke-width:2px
+    classDef tg fill:#FFECB3,stroke:#FFA000,stroke-width:1px
+    classDef asg fill:#FFF8E1,stroke:#FB8C00,stroke-width:2px
+    classDef lt fill:#F9FBE7,stroke:#7CB342,stroke-width:1px
+    classDef az fill:#F5F5F5,stroke:#616161,stroke-width:1px,stroke-dasharray: 3 3
+    classDef step fill:#E3F2FD,stroke:#2196F3,stroke-width:1px,color:#0D47A1,font-weight:bold
+    classDef internet fill:#F5F5F5,stroke:#616161,stroke-width:1px
+    
+    %% Define Internet
+    Internet[Internet]
+    
+    %% Define AWS Cloud
+    subgraph Cloud["AWS Cloud"]
+        %% Define VPC
+        subgraph VPC["VPC: ALB-Lab-VPC (10.0.0.0/16)"]
+            %% Define Internet Gateway
+            IGW[Internet Gateway]
+            
+            %% Define Load Balancer components
+            ALB[Application Load Balancer]
+            TG[Target Group<br>HTTP:80, Path: /]
+            
+            %% Define Availability Zone 1
+            subgraph AZ1["Availability Zone 1"]
+                PublicSubnet1[Public Subnet 1<br>10.0.1.0/24]
+                PrivateSubnet1[Private Subnet 1<br>10.0.3.0/24]
+                NAT[NAT Gateway]
+                EC2_1[EC2 Instance 1<br>Web Server]
+            end
+            
+            %% Define Availability Zone 2
+            subgraph AZ2["Availability Zone 2"]
+                PublicSubnet2[Public Subnet 2<br>10.0.2.0/24]
+                PrivateSubnet2[Private Subnet 2<br>10.0.4.0/24]
+                EC2_2[EC2 Instance 2<br>Web Server]
+            end
+            
+            %% Define Security Groups
+            ALB_SG[ALB Security Group<br>Allows HTTP from anywhere]
+            WEB_SG[Web Server Security Group<br>Allows HTTP from ALB]
+            
+            %% Define Auto Scaling Group components
+            ASG[Auto Scaling Group<br>Min: 2, Max: 4, Desired: 2]
+            LT[Launch Template<br>AMI: Amazon Linux 2<br>Instance Type: t2.micro]
+        end
+    end
+    
+    %% Define connections
+    Internet --> IGW
+    IGW --> PublicSubnet1
+    IGW --> PublicSubnet2
+    PublicSubnet1 --> ALB
+    PublicSubnet2 --> ALB
+    ALB --> TG
+    TG --> EC2_1
+    TG --> EC2_2
+    PublicSubnet1 --> NAT
+    EC2_1 --> NAT
+    EC2_2 --> NAT
+    NAT --> IGW
+    ALB_SG --> ALB
+    WEB_SG --> EC2_1
+    WEB_SG --> EC2_2
+    ASG --> EC2_1
+    ASG --> EC2_2
+    LT --> ASG
+    
+    %% Define process steps
+    Step1["1. Create VPC with public<br>and private subnets"]
+    Step2["2. Create security<br>groups"]
+    Step3["3. Create Launch<br>Template"]
+    Step4["4. Create Application<br>Load Balancer"]
+    Step5["5. Create Auto<br>Scaling Group"]
+    
+    %% Connect steps to components
+    Step1 -.-> VPC
+    Step2 -.-> ALB_SG
+    Step3 -.-> LT
+    Step4 -.-> ALB
+    Step5 -.-> ASG
+    
+    %% Apply styles
+    class VPC vpc
+    class PublicSubnet1,PublicSubnet2 publicSubnet
+    class PrivateSubnet1,PrivateSubnet2 privateSubnet
+    class EC2_1,EC2_2 instance
+    class IGW igw
+    class NAT nat
+    class ALB_SG,WEB_SG sg
+    class ALB alb
+    class TG tg
+    class ASG asg
+    class LT lt
+    class AZ1,AZ2 az
+    class Step1,Step2,Step3,Step4,Step5 step
+    class Internet internet
+    
+    %% Add author credit
+    author[Authored by V Vier]
+    style author fill:none,stroke:none

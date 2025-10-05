@@ -1,0 +1,79 @@
+flowchart TB
+    %% Define styles
+    classDef vpc fill:#E8F4FA,stroke:#1A73E8,stroke-width:2px
+    classDef subnet fill:#F2F9FF,stroke:#1A73E8,stroke-width:1px
+    classDef instance fill:#FFFFFF,stroke:#1A73E8,stroke-width:1px
+    classDef igw fill:#FFFFFF,stroke:#1A73E8,stroke-width:1px
+    classDef sg fill:#F8F9FA,stroke:#1A73E8,stroke-width:1px,stroke-dasharray: 5 5
+    classDef asg fill:#FFF8E1,stroke:#FB8C00,stroke-width:2px
+    classDef lt fill:#F9FBE7,stroke:#7CB342,stroke-width:1px
+    classDef cw fill:#F3E5F5,stroke:#9C27B0,stroke-width:1px
+    classDef az fill:#F5F5F5,stroke:#616161,stroke-width:1px,stroke-dasharray: 3 3
+    classDef step fill:#E3F2FD,stroke:#2196F3,stroke-width:1px,color:#0D47A1,font-weight:bold
+    
+    %% Define AWS Cloud
+    subgraph Cloud["AWS Cloud"]
+        %% Define VPC
+        subgraph VPC["VPC: ASG-Lab-VPC (10.0.0.0/16)"]
+            %% Define Internet Gateway
+            IGW[Internet Gateway]
+            
+            %% Define Availability Zone 1
+            subgraph AZ1["Availability Zone 1"]
+                Subnet1[Public Subnet 1<br>10.0.1.0/24]
+                EC2_1[EC2 Instance 1]
+            end
+            
+            %% Define Availability Zone 2
+            subgraph AZ2["Availability Zone 2"]
+                Subnet2[Public Subnet 2<br>10.0.2.0/24]
+                EC2_2[EC2 Instance 2]
+            end
+            
+            %% Define Auto Scaling Group components
+            ASG[Auto Scaling Group<br>Min: 1, Max: 4, Desired: 2]
+            LT[Launch Template<br>AMI: Amazon Linux 2<br>Instance Type: t2.micro]
+            SG[Security Group<br>Allows HTTP and SSH]
+            CW[CloudWatch Alarm<br>CPU Utilization > 50%]
+        end
+    end
+    
+    %% Define connections
+    IGW --> Subnet1
+    IGW --> Subnet2
+    Subnet1 --> EC2_1
+    Subnet2 --> EC2_2
+    ASG --> EC2_1
+    ASG --> EC2_2
+    LT --> ASG
+    CW --> ASG
+    SG --> EC2_1
+    SG --> EC2_2
+    
+    %% Define process steps
+    Step1["1. Create VPC with<br>public subnets"]
+    Step2["2. Create Launch<br>Template"]
+    Step3["3. Create Auto<br>Scaling Group"]
+    Step4["4. Configure<br>scaling policies"]
+    
+    %% Connect steps to components
+    Step1 -.-> VPC
+    Step2 -.-> LT
+    Step3 -.-> ASG
+    Step4 -.-> CW
+    
+    %% Apply styles
+    class VPC vpc
+    class Subnet1,Subnet2 subnet
+    class EC2_1,EC2_2 instance
+    class IGW igw
+    class SG sg
+    class ASG asg
+    class LT lt
+    class CW cw
+    class AZ1,AZ2 az
+    class Step1,Step2,Step3,Step4 step
+    
+    %% Add author credit
+    author[Authored by V Vier]
+    style author fill:none,stroke:none

@@ -1,0 +1,44 @@
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#fff','primaryTextColor':'#000','primaryBorderColor':'#FBBF24','lineColor':'#666'}}}%%
+flowchart TB
+    subgraph Resources["AWS Resources"]
+        A[EC2 Instances]
+        B[S3 Storage]
+        C[RDS Databases]
+        D[Lambda Functions]
+    end
+    
+    subgraph CostManagement["AWS Cost Management"]
+        E[Cost Explorer<br/>Visualize Spending]
+        F[Cost Data<br/>Service/Region/Usage Type]
+        G[Budgets<br/>Monthly Budget: $5]
+    end
+    
+    subgraph Alerts["Budget Alerts"]
+        H[Threshold Alert<br/>80% of Budget]
+        I[SNS Notification]
+        J[Email Alert<br/>Budget Exceeded]
+    end
+    
+    A -->|"Usage charges"| F
+    B -->|"Storage charges"| F
+    C -->|"Database charges"| F
+    D -->|"Compute charges"| F
+    F -->|"Analyze"| E
+    F -->|"Monitor"| G
+    G -->|"Evaluate spending"| H
+    H -->|"Trigger"| I
+    I -->|"Send"| J
+    
+    style A fill:#F97316,stroke:#EA580C,color:#fff
+    style B fill:#3B82F6,stroke:#2563EB,color:#fff
+    style C fill:#10B981,stroke:#059669,color:#fff
+    style D fill:#A855F7,stroke:#9333EA,color:#fff
+    style E fill:#FBBF24,stroke:#F59E0B,color:#000
+    style F fill:#FBBF24,stroke:#F59E0B,color:#000
+    style G fill:#FBBF24,stroke:#F59E0B,color:#000
+    style H fill:#EF4444,stroke:#DC2626,color:#fff
+    style I fill:#F97316,stroke:#EA580C,color:#fff
+    style J fill:#10B981,stroke:#059669,color:#fff
+    style Resources fill:#F8FAFC,stroke:#64748B
+    style CostManagement fill:#FEF3C7,stroke:#FBBF24
+    style Alerts fill:#FEE2E2,stroke:#EF4444

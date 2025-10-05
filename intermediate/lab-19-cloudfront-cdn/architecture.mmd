@@ -1,0 +1,77 @@
+flowchart LR
+    %% Define styles
+    classDef users fill:#F5F5F5,stroke:#616161,stroke-width:1px
+    classDef edge fill:#FFECB3,stroke:#FFA000,stroke-width:2px
+    classDef distribution fill:#FFE0B2,stroke:#FB8C00,stroke-width:2px
+    classDef s3 fill:#E1F5FE,stroke:#0288D1,stroke-width:2px
+    classDef aws fill:#F5F5F5,stroke:#616161,stroke-width:1px,stroke-dasharray: 3 3
+    classDef step fill:#E3F2FD,stroke:#2196F3,stroke-width:1px,color:#0D47A1,font-weight:bold
+    
+    %% Define Global Users
+    Users[Global Users]
+    
+    %% Define CloudFront Edge Locations
+    subgraph EdgeLocations["CloudFront Edge Locations"]
+        NA[North America]
+        EU[Europe]
+        AS[Asia]
+        AU[Australia]
+        SA[South America]
+    end
+    
+    %% Define CloudFront Distribution
+    subgraph Distribution["CloudFront Distribution"]
+        DefaultCache["Default Cache Behavior<br>Path: /*<br>TTL: 24h"]
+        ImagesCache["Images Cache Behavior<br>Path: /images/*<br>TTL: 7d"]
+        ErrorResponse["Custom Error Response<br>404 → /error.html"]
+        OAI["Origin Access Identity"]
+    end
+    
+    %% Define AWS Cloud with S3 Bucket
+    subgraph AWS["AWS Cloud"]
+        subgraph Region["AWS Region"]
+            S3["S3 Origin Bucket"]
+            S3Content["Content:<br>- index.html<br>- error.html<br>- sample-image.jpg"]
+            S3Policy["Bucket Policy:<br>Allow CloudFront OAI"]
+        end
+    end
+    
+    %% Define connections
+    Users -->|1. Request content| EdgeLocations
+    EdgeLocations -->|2. Check cache| Distribution
+    Distribution -->|3. Fetch if not cached| S3
+    S3 --- S3Content
+    S3 --- S3Policy
+    EdgeLocations -->|4. Return cached content| Users
+    OAI -->|Secure access| S3
+    
+    %% Define process steps
+    Step1["1. User requests<br>website content"]
+    Step2["2. CloudFront checks<br>edge cache"]
+    Step3["3. If cache miss,<br>fetch from S3"]
+    Step4["4. Cache content at<br>edge location"]
+    Step5["5. Return content<br>to user"]
+    
+    %% Connect steps to components
+    Step1 -.-> Users
+    Step2 -.-> EdgeLocations
+    Step3 -.-> Distribution
+    Step4 -.-> EdgeLocations
+    Step5 -.-> Users
+    
+    %% Apply styles
+    class Users users
+    class NA,EU,AS,AU,SA edge
+    class DefaultCache,ImagesCache,ErrorResponse,OAI,Distribution distribution
+    class S3,S3Content,S3Policy s3
+    class AWS,Region aws
+    class Step1,Step2,Step3,Step4,Step5 step
+    
+    %% Add notes
+    note1["CloudFront caches content at edge locations<br>close to users for faster delivery"]
+    note2["Origin Access Identity ensures S3 content<br>is only accessible through CloudFront"]
+    note3["Different cache behaviors can be configured<br>for different content types"]
+    
+    %% Add author credit
+    author[Authored by V Vier]
+    style author fill:none,stroke:none

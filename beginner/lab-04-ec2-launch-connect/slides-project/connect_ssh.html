@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
+    <style>
+      .slide-container {
+        width: 1280px;
+        min-height: 720px;
+        background: #FFFFFF;
+        color: #333333;
+        font-family: Arial, sans-serif;
+        padding: 40px;
+      }
+      .title {
+        font-size: 36px;
+        font-weight: bold;
+        color: #232F3E;
+        margin-bottom: 15px;
+      }
+      .subtitle {
+        font-size: 24px;
+        color: #FF9900;
+        margin-bottom: 20px;
+      }
+      .content {
+        font-size: 20px;
+        display: flex;
+        gap: 40px;
+      }
+      .column {
+        flex: 1;
+      }
+      .step-container {
+        display: flex;
+        margin-bottom: 12px;
+      }
+      .step-number {
+        background-color: #FF9900;
+        color: white;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-right: 15px;
+        flex-shrink: 0;
+      }
+      .step-content {
+        flex: 1;
+      }
+      .os-tab {
+        padding: 10px 15px;
+        margin-right: 5px;
+        border-radius: 4px 4px 0 0;
+        cursor: pointer;
+        font-weight: bold;
+      }
+      .os-tab.active {
+        background-color: #f1f1f1;
+        border: 1px solid #ddd;
+        border-bottom: none;
+      }
+      .os-content {
+        background-color: #f1f1f1;
+        border: 1px solid #ddd;
+        padding: 15px;
+        border-radius: 0 4px 4px 4px;
+        font-family: monospace;
+        font-size: 16px;
+      }
+      .footer {
+        font-size: 14px;
+        color: #666;
+        margin-top: 15px;
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="slide-container">
+      <h1 class="title">Step 3: Connect via SSH</h1>
+      <h2 class="subtitle">Accessing your EC2 instance securely</h2>
+      
+      <div class="content">
+        <div class="column">
+          <p class="mb-3">SSH (Secure Shell) is a secure protocol for connecting to your EC2 instance. The connection process varies slightly depending on your operating system.</p>
+          
+          <div class="step-container">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <p>Locate your instance's <strong>Public IPv4 address</strong> in the EC2 console.</p>
+            </div>
+          </div>
+          
+          <div class="step-container">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <p>Ensure your key pair file (<code>.pem</code>) has the correct permissions.</p>
+            </div>
+          </div>
+          
+          <div class="step-container">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <p>Use the SSH command with your key file and the instance's public IP address.</p>
+            </div>
+          </div>
+          
+          <div class="step-container">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <p>Accept the connection when prompted (first connection only).</p>
+            </div>
+          </div>
+          
+          <div class="step-container">
+            <div class="step-number">5</div>
+            <div class="step-content">
+              <p>You should now be connected to your EC2 instance's command line.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="column">
+          <div class="mb-2">
+            <span class="os-tab active" id="linux-tab">Linux/macOS</span>
+            <span class="os-tab" id="windows-tab">Windows</span>
+          </div>
+          
+          <div class="os-content" id="linux-content">
+            # Set correct permissions for your key file<br>
+            chmod 400 my-key-pair.pem<br><br>
+            
+            # Connect to your instance<br>
+            ssh -i my-key-pair.pem ec2-user@ec2-198-51-100-1.compute-1.amazonaws.com<br><br>
+            
+            # For Amazon Linux 2023, use 'ec2-user' as the username<br>
+            # For Ubuntu AMIs, use 'ubuntu' as the username
+          </div>
+          
+          <div class="os-content hidden" id="windows-content">
+            # Using Windows PowerShell<br>
+            ssh -i my-key-pair.pem ec2-user@ec2-198-51-100-1.compute-1.amazonaws.com<br><br>
+            
+            # Using PuTTY<br>
+            # 1. Convert .pem to .ppk using PuTTYgen<br>
+            # 2. Configure PuTTY with your .ppk file<br>
+            # 3. Enter hostname: ec2-user@ec2-198-51-100-1.compute-1.amazonaws.com
+          </div>
+          
+          <div style="height: 200px; margin-top: 20px;">
+            <canvas id="sshChart"></canvas>
+          </div>
+        </div>
+      </div>
+      
+      <div class="footer">
+        <p>Authored by V Vier</p>
+      </div>
+    </div>
+    
+    <script>
+      // Tab switching functionality
+      document.getElementById('linux-tab').addEventListener('click', function() {
+        document.getElementById('linux-tab').classList.add('active');
+        document.getElementById('windows-tab').classList.remove('active');
+        document.getElementById('linux-content').classList.remove('hidden');
+        document.getElementById('windows-content').classList.add('hidden');
+      });
+      
+      document.getElementById('windows-tab').addEventListener('click', function() {
+        document.getElementById('windows-tab').classList.add('active');
+        document.getElementById('linux-tab').classList.remove('active');
+        document.getElementById('windows-content').classList.remove('hidden');
+        document.getElementById('linux-content').classList.add('hidden');
+      });
+      
+      // Chart showing SSH connection methods
+      const ctx = document.getElementById('sshChart').getContext('2d');
+      const sshChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['SSH Command Line', 'PuTTY', 'EC2 Instance Connect', 'SSH via AWS Console'],
+          datasets: [{
+            label: 'Ease of Use (1-10)',
+            data: [8, 6, 9, 10],
+            backgroundColor: '#3B82F6',
+            borderColor: '#2563EB',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            title: {
+              display: true,
+              text: 'SSH Connection Methods Comparison',
+              font: {
+                size: 16
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 10
+            }
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

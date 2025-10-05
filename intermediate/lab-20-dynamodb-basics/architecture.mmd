@@ -1,0 +1,86 @@
+flowchart TB
+    %% Define styles
+    classDef aws fill:#F5F5F5,stroke:#616161,stroke-width:1px,stroke-dasharray: 3 3
+    classDef dynamodb fill:#3F51B5,stroke:#303F9F,stroke-width:2px,color:#FFFFFF
+    classDef table fill:#C5CAE9,stroke:#3F51B5,stroke-width:1px
+    classDef index fill:#E8EAF6,stroke:#3F51B5,stroke-width:1px,stroke-dasharray: 5 5
+    classDef key fill:#FFFFFF,stroke:#3F51B5,stroke-width:1px
+    classDef item fill:#FFFFFF,stroke:#3F51B5,stroke-width:1px
+    classDef feature fill:#E1F5FE,stroke:#0288D1,stroke-width:1px
+    classDef app fill:#4CAF50,stroke:#388E3C,stroke-width:2px,color:#FFFFFF
+    classDef step fill:#E3F2FD,stroke:#2196F3,stroke-width:1px,color:#0D47A1,font-weight:bold
+    
+    %% Define AWS Cloud
+    subgraph Cloud["AWS Cloud"]
+        %% Define DynamoDB Service
+        subgraph DynamoDB["Amazon DynamoDB"]
+            %% Define Users Table
+            subgraph UsersTable["Users Table"]
+                UsersPK["Primary Key:<br>UserId (Partition Key)<br>Email (Sort Key)"]
+                UsersGSI["Global Secondary Index:<br>LastName-FirstName-index<br>LastName (Partition Key)<br>FirstName (Sort Key)"]
+                UsersItem["Sample Item:<br>UserId: user1<br>Email: user1@example.com<br>FirstName: John<br>LastName: Doe<br>Age: 30<br>..."]
+            end
+            
+            %% Define Orders Table
+            subgraph OrdersTable["Orders Table"]
+                OrdersPK["Primary Key:<br>CustomerId (Partition Key)<br>OrderId (Sort Key)"]
+                OrdersLSI["Local Secondary Index:<br>OrderDate-index<br>CustomerId (Partition Key)<br>OrderDate (Sort Key)"]
+                OrdersItem["Sample Item:<br>CustomerId: cust1<br>OrderId: order1<br>OrderDate: 2023-01-15<br>Amount: 125.50<br>Status: Shipped"]
+            end
+            
+            %% Define DynamoDB Features
+            Streams["DynamoDB Streams"]
+            AutoScaling["Auto Scaling"]
+            Backup["Backup & Restore"]
+        end
+        
+        %% Define Application
+        App["Application<br>CRUD Operations"]
+    end
+    
+    %% Define connections
+    App -->|"Create<br>Read<br>Update<br>Delete"| UsersTable
+    App -->|"Create<br>Read<br>Update<br>Delete"| OrdersTable
+    UsersTable -->|"Change Data<br>Capture"| Streams
+    OrdersTable -.->|"Optional"| Streams
+    UsersTable --- AutoScaling
+    OrdersTable --- AutoScaling
+    UsersTable --- Backup
+    OrdersTable --- Backup
+    
+    %% Define process steps
+    Step1["1. Create DynamoDB tables"]
+    Step2["2. Define primary keys and indexes"]
+    Step3["3. Add items to tables"]
+    Step4["4. Query and scan data"]
+    Step5["5. Configure additional features"]
+    
+    %% Connect steps to components
+    Step1 -.-> DynamoDB
+    Step2 -.-> UsersPK
+    Step2 -.-> OrdersPK
+    Step3 -.-> UsersItem
+    Step3 -.-> OrdersItem
+    Step4 -.-> App
+    Step5 -.-> Streams
+    Step5 -.-> AutoScaling
+    Step5 -.-> Backup
+    
+    %% Apply styles
+    class Cloud aws
+    class DynamoDB dynamodb
+    class UsersTable,OrdersTable table
+    class UsersPK,OrdersPK key
+    class UsersGSI,OrdersLSI index
+    class UsersItem,OrdersItem item
+    class Streams,AutoScaling,Backup feature
+    class App app
+    class Step1,Step2,Step3,Step4,Step5 step
+    
+    %% Add notes
+    note1["Global Secondary Index (GSI):<br>- Different partition key than base table<br>- Can be added to existing table"]
+    note2["Local Secondary Index (LSI):<br>- Same partition key as base table<br>- Must be created with table"]
+    
+    %% Add author credit
+    author[Authored by V Vier]
+    style author fill:none,stroke:none

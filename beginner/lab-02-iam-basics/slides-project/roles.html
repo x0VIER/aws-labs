@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
+    <style>
+      .slide-container {
+        width: 1280px;
+        min-height: 720px;
+        background: #FFFFFF;
+        color: #333333;
+        font-family: Arial, sans-serif;
+        padding: 40px;
+      }
+      .title {
+        font-size: 36px;
+        font-weight: bold;
+        color: #232F3E;
+        margin-bottom: 15px;
+      }
+      .subtitle {
+        font-size: 24px;
+        color: #FF9900;
+        margin-bottom: 20px;
+      }
+      .content {
+        font-size: 20px;
+        display: flex;
+        gap: 40px;
+      }
+      .text-content {
+        flex: 1;
+      }
+      .visual-content {
+        flex: 1;
+      }
+      .info-box {
+        background-color: #f0f8ff;
+        border-left: 5px solid #3B82F6;
+        padding: 12px;
+        margin: 15px 0;
+        border-radius: 4px;
+      }
+      .step-container {
+        display: flex;
+        margin-bottom: 12px;
+      }
+      .step-number {
+        background-color: #A855F7;
+        color: white;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-right: 15px;
+        flex-shrink: 0;
+      }
+      .step-content {
+        flex: 1;
+      }
+      .footer {
+        font-size: 14px;
+        color: #666;
+        margin-top: 15px;
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="slide-container">
+      <h1 class="title">Step 5: Understand IAM Roles</h1>
+      <h2 class="subtitle">Granting permissions to AWS services</h2>
+      
+      <div class="content">
+        <div class="text-content">
+          <p class="mb-3"><strong>IAM roles</strong> are similar to users but are intended to be assumable by anyone who needs them, including AWS services.</p>
+          
+          <div class="info-box">
+            <p><strong>Key Differences from Users:</strong></p>
+            <ul class="list-disc ml-6 mt-1">
+              <li>Not associated with one specific person</li>
+              <li>Can be assumed temporarily</li>
+              <li>No long-term credentials</li>
+            </ul>
+          </div>
+          
+          <p class="mb-3"><strong>Common Use Case:</strong> Allow EC2 instances to access S3 buckets without storing AWS credentials.</p>
+          
+          <div class="step-container">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <p>In the IAM console, go to <strong>Roles</strong> and click <strong>Create role</strong>.</p>
+            </div>
+          </div>
+          
+          <div class="step-container">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <p>For trusted entity type, select <strong>AWS service</strong> and choose <strong>EC2</strong>.</p>
+            </div>
+          </div>
+          
+          <div class="step-container">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <p>Attach the <strong>AmazonS3ReadOnlyAccess</strong> policy and name the role.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="visual-content">
+          <div style="height: 300px;">
+            <canvas id="roleChart"></canvas>
+          </div>
+          
+          <p class="mt-4 text-center"><strong>Role Trust Relationship:</strong></p>
+          <pre class="bg-gray-100 p-3 rounded text-sm">
+{
+  "Version": "2012-10-17",
+  "Statement": [{
+    "Effect": "Allow",
+    "Principal": {
+      "Service": "ec2.amazonaws.com"
+    },
+    "Action": "sts:AssumeRole"
+  }]
+}</pre>
+        </div>
+      </div>
+      
+      <div class="footer">
+        <p>Authored by V Vier</p>
+      </div>
+    </div>
+    
+    <script>
+      // Chart showing role relationships
+      const ctx = document.getElementById('roleChart').getContext('2d');
+      const roleChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['EC2 Service', 'IAM Role', 'S3 Service'],
+          datasets: [{
+            data: [1, 1, 1],
+            backgroundColor: [
+              '#F97316',
+              '#A855F7',
+              '#3B82F6'
+            ],
+            borderColor: [
+              '#EA580C',
+              '#9333EA',
+              '#2563EB'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            title: {
+              display: true,
+              text: 'Role-Based Access Flow',
+              font: {
+                size: 16
+              }
+            },
+            legend: {
+              position: 'bottom'
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  const labels = [
+                    'EC2 assumes the role',
+                    'Role contains permissions',
+                    'S3 grants access based on role'
+                  ];
+                  return labels[context.dataIndex];
+                }
+              }
+            }
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

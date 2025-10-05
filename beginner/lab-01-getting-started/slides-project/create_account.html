@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
+    <style>
+      .slide-container {
+        width: 1280px;
+        min-height: 720px;
+        background: #FFFFFF;
+        color: #333333;
+        font-family: Arial, sans-serif;
+        padding: 40px;
+      }
+      .title {
+        font-size: 36px;
+        font-weight: bold;
+        color: #232F3E;
+        margin-bottom: 20px;
+      }
+      .subtitle {
+        font-size: 24px;
+        color: #FF9900;
+        margin-bottom: 30px;
+      }
+      .content {
+        font-size: 20px;
+      }
+      .step-container {
+        display: flex;
+        margin-bottom: 20px;
+      }
+      .step-number {
+        background-color: #FF9900;
+        color: white;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-right: 15px;
+        flex-shrink: 0;
+      }
+      .step-content {
+        flex: 1;
+      }
+      .note-box {
+        background-color: #f0f7fb;
+        border-left: 5px solid #3498db;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 4px;
+      }
+      .footer {
+        position: relative;
+        bottom: 0;
+        font-size: 14px;
+        color: #666;
+        margin-top: 30px;
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="slide-container">
+      <h1 class="title">Step 1: Create a New AWS Account</h1>
+      <h2 class="subtitle">Setting up your AWS foundation</h2>
+      
+      <div class="content">
+        <p class="mb-6">Before you begin, you'll need:</p>
+        <ul class="list-disc ml-6 mb-6">
+          <li class="mb-2">A unique email address (not previously used with AWS)</li>
+          <li class="mb-2">A valid credit card for verification</li>
+          <li class="mb-2">A phone number for verification</li>
+        </ul>
+        
+        <div class="step-container">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <p>Navigate to the <strong>AWS Free Tier</strong> page and click <strong>Create a Free Account</strong>.</p>
+          </div>
+        </div>
+        
+        <div class="step-container">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <p>Enter your email address, password, and AWS account name.</p>
+          </div>
+        </div>
+        
+        <div class="step-container">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <p>Provide your contact information and credit card details.</p>
+          </div>
+        </div>
+        
+        <div class="step-container">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <p>Complete the phone verification step.</p>
+          </div>
+        </div>
+        
+        <div class="step-container">
+          <div class="step-number">5</div>
+          <div class="step-content">
+            <p>Choose the <strong>Basic Support - Free</strong> plan.</p>
+          </div>
+        </div>
+        
+        <div class="note-box">
+          <p><strong>Important:</strong> The user you are now logged in as is the <strong>root user</strong>, which has unrestricted access to all resources. For security reasons, you should avoid using the root user for everyday tasks.</p>
+        </div>
+      </div>
+      
+      <div class="footer">
+        <p>Authored by V Vier</p>
+      </div>
+    </div>
+  </body>
+</html>
